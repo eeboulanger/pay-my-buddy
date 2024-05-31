@@ -1,6 +1,6 @@
 package com.paymybuddy.webapp.service;
 
-import com.paymybuddy.webapp.model.Client;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.repository.ClientRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ClientServiceTests {
+public class UserServiceTests {
     @Mock
     private ClientRepository repository;
     @InjectMocks
@@ -24,12 +24,12 @@ public class ClientServiceTests {
     @Test
     @DisplayName("Given there's a client with the email, then return the client")
     public void getClientByEmailTest() {
-        Client client = new Client();
+        User user = new User();
         String email = "john_doe@mail.com";
-        client.setEmail(email);
-        when(repository.findByEmail(email)).thenReturn(Optional.of(client));
+        user.setEmail(email);
+        when(repository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        Optional<Client> result = service.getClientByEmail(email);
+        Optional<User> result = service.getClientByEmail(email);
 
         assertTrue(result.isPresent());
         assertEquals(email, result.get().getEmail());
@@ -40,7 +40,7 @@ public class ClientServiceTests {
     public void givenThereIsNoEmail_whenGetByEmail_thenReturnEmpty() {
         when(repository.findByEmail("john_doe@mail.com")).thenReturn(Optional.empty());
 
-        Optional<Client> result = service.getClientByEmail("john_doe@mail.com");
+        Optional<User> result = service.getClientByEmail("john_doe@mail.com");
 
         assertTrue(result.isEmpty());
     }
@@ -48,11 +48,11 @@ public class ClientServiceTests {
     @Test
     @DisplayName("Create client should save client in database and return client as an object")
     public void createClientTest() {
-        Client client = new Client();
-        Client saved = new Client();
-        when(repository.save(client)).thenReturn(saved);
+        User user = new User();
+        User saved = new User();
+        when(repository.save(user)).thenReturn(saved);
 
-        Client result = service.createClient(client);
+        User result = service.createClient(user);
 
         assertNotNull(result);
         assertEquals(saved, result);

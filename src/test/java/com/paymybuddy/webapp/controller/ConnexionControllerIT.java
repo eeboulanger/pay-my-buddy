@@ -30,7 +30,7 @@ public class ConnexionControllerIT {
     @DisplayName("Given there's no client with the given email address, then create new client")
     public void signUpTest() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "123@Abcd", "Maria", "Doe");
+        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "123@Abcd", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/public/signup")
@@ -45,7 +45,7 @@ public class ConnexionControllerIT {
     @DisplayName("Given there's a client with the given email address, then don't create new client")
     public void signUpFailsTest() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("john_doe@mail.com", "password", "John", "Doe");
+        RegistrationForm form = new RegistrationForm("john_doe@mail.com", "password", "John");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/public/signup")
@@ -60,7 +60,7 @@ public class ConnexionControllerIT {
     @DisplayName("Given the email address isn't valid, then show error")
     public void givenEmailIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doemail.com", "123@Abcd", "Maria", "Doe");
+        RegistrationForm form = new RegistrationForm("maria_doemail.com", "123@Abcd", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/public/signup")
@@ -70,11 +70,12 @@ public class ConnexionControllerIT {
                 .andExpect(status().is3xxRedirection()) //Expect new client to be created
                 .andExpect(redirectedUrl("/error"));
     }
+
     @Test
     @DisplayName("Given the password isn't valid, then show error")
     public void givenPasswordIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "AAAAAbcd", "Maria", "Doe");
+        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "AAAAAbcd", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/public/signup")

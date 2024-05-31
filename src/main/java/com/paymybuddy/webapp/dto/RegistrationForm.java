@@ -8,16 +8,14 @@ public class RegistrationForm {
     private String email;
     @ToString.Exclude
     private String password;
-    private String firstName;
-    private String lastName;
+    private String username;
 
     public RegistrationForm() {
     }
 
-    public RegistrationForm(String email, String password, String firstName, String lastName) {
+    public RegistrationForm(String email, String password, String username) {
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.username = username;
     }
 }

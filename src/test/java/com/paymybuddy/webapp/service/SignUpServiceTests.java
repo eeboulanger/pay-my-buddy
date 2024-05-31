@@ -5,7 +5,7 @@ import com.paymybuddy.webapp.exception.EmailNotUniqueException;
 import com.paymybuddy.webapp.exception.EmailNotValidException;
 import com.paymybuddy.webapp.exception.PasswordNotValidException;
 import com.paymybuddy.webapp.exception.RegistrationException;
-import com.paymybuddy.webapp.model.Client;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.utils.IValidationUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,10 +52,10 @@ public class SignUpServiceTests {
         RegistrationForm form = new RegistrationForm();
         form.setEmail("john_doe@mail.com");
         form.setPassword("password");
-        Client client = new Client();
+        User user = new User();
         when(validationUtil.validateEmail("john_doe@mail.com")).thenReturn(true);
         when(validationUtil.validatePassword("password")).thenReturn(true);
-        when(clientService.getClientByEmail(form.getEmail())).thenReturn(Optional.of(client));
+        when(clientService.getClientByEmail(form.getEmail())).thenReturn(Optional.of(user));
 
         assertThrows(EmailNotUniqueException.class, () -> service.signUp(form));
     }

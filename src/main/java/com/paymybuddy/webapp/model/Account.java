@@ -9,17 +9,15 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "account")
 public class Account {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private int id;
 
     @Column(name = "balance", nullable = false)
-    private BigDecimal balance;
-
+    private double balance;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

@@ -5,7 +5,7 @@ import com.paymybuddy.webapp.exception.EmailNotUniqueException;
 import com.paymybuddy.webapp.exception.EmailNotValidException;
 import com.paymybuddy.webapp.exception.PasswordNotValidException;
 import com.paymybuddy.webapp.exception.RegistrationException;
-import com.paymybuddy.webapp.model.Client;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.utils.IValidationUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -42,24 +42,23 @@ public class SignUpService implements ISignUpService {
         }
         // Check if the email already exists in the database
         if (!service.getClientByEmail(form.getEmail()).isEmpty()) {
-            logger.error("Failed to create new client. Email already exists in database");
+            logger.error("Failed to create new user. Email already exists in database");
             throw new EmailNotUniqueException();
         }
 
-        Client client = mapToClient(form);
-        service.createClient(client);
+        User user = mapToClient(form);
+        service.createClient(user);
         return true;
     }
 
     /**
      * create client based on registration form
      */
-    private Client mapToClient(RegistrationForm form) {
-        Client client = new Client();
-        client.setEmail(form.getEmail());
-        client.setFirstName(form.getFirstName());
-        client.setLastName(form.getLastName());
-        client.setPassword(passwordEncoder.encode(form.getPassword()));
-        return client;
+    private User mapToClient(RegistrationForm form) {
+        User user = new User();
+        user.setEmail(form.getEmail());
+        user.setUsername(form.getUsername());
+        user.setPassword(passwordEncoder.encode(form.getPassword()));
+        return user;
     }
 }

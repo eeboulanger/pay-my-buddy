@@ -1,7 +1,7 @@
 package com.paymybuddy.webapp.service;
 
 
-import com.paymybuddy.webapp.model.Client;
+import com.paymybuddy.webapp.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,10 +27,10 @@ public class CustomUserDetailsServiceTest {
     @Test
     public void loadUserByUsername_WhenUserExists_ShouldReturnUserDetails() {
         String email = "joe@mail.com";
-        Client client = new Client();
-        client.setEmail(email);
-        client.setPassword("password");
-        when(service.getClientByEmail(email)).thenReturn(Optional.of(client));
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword("password");
+        when(service.getClientByEmail(email)).thenReturn(Optional.of(user));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
