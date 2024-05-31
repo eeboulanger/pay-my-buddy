@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ConnexionServiceTests {
+public class SignUpServiceTests {
     @Mock
     private ClientService clientService;
     @Mock
@@ -29,7 +29,7 @@ public class ConnexionServiceTests {
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks
-    private ConnexionService service;
+    private SignUpService service;
 
     @Test
     @DisplayName("Given there is no client with the given email address, when sign up new client, then return true")

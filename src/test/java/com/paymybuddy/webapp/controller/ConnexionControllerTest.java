@@ -2,7 +2,7 @@ package com.paymybuddy.webapp.controller;
 
 import com.paymybuddy.webapp.dto.RegistrationForm;
 import com.paymybuddy.webapp.exception.RegistrationException;
-import com.paymybuddy.webapp.service.IConnexionService;
+import com.paymybuddy.webapp.service.ISignUpService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ConnexionControllerTest {
     @Mock
-    private IConnexionService service;
+    private ISignUpService service;
     @InjectMocks
     private ConnexionController controller;
 

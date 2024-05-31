@@ -7,6 +7,7 @@ import com.paymybuddy.webapp.exception.PasswordNotValidException;
 import com.paymybuddy.webapp.exception.RegistrationException;
 import com.paymybuddy.webapp.model.Client;
 import com.paymybuddy.webapp.utils.IValidationUtil;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +15,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConnexionService implements IConnexionService {
-    private final Logger logger = LoggerFactory.getLogger(ConnexionService.class);
-    @Autowired
-    private IValidationUtil validationUtil;
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private ClientService service;
+public class SignUpService implements ISignUpService {
+    private final Logger logger = LoggerFactory.getLogger(SignUpService.class);
+    private final IValidationUtil validationUtil;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final ClientService service;
 
-    @Override
-    public String logIn(String email, String password) {
-        return "error";
+    @Autowired
+    public SignUpService(IValidationUtil validationUtil, BCryptPasswordEncoder passwordEncoder, ClientService service) {
+        this.validationUtil = validationUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.service = service;
     }
 
     @Override
+    @Transactional
     public boolean signUp(RegistrationForm form) throws RegistrationException {
         // Validate form
         if (!validationUtil.validateEmail(form.getEmail())) {

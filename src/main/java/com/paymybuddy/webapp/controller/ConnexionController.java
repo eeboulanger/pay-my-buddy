@@ -2,7 +2,7 @@ package com.paymybuddy.webapp.controller;
 
 import com.paymybuddy.webapp.dto.RegistrationForm;
 import com.paymybuddy.webapp.exception.RegistrationException;
-import com.paymybuddy.webapp.service.IConnexionService;
+import com.paymybuddy.webapp.service.ISignUpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class ConnexionController implements IConnexionController {
     private final Logger logger = LoggerFactory.getLogger(ConnexionController.class);
     @Autowired
-    private IConnexionService service;
+    private ISignUpService service;
 
     @PostMapping("/public/signup")
     public String createNewClient(@RequestBody RegistrationForm form) {

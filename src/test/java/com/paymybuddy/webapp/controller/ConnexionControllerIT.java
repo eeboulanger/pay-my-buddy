@@ -11,7 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,5 +83,17 @@ public class ConnexionControllerIT {
                         .content(mapper.writeValueAsString(form)))
                 .andExpect(status().is3xxRedirection()) //Expect new client to be created
                 .andExpect(redirectedUrl("/error"));
+    }
+
+    @Test
+    public void userLoginTest() throws Exception {
+        mockMvc.perform(formLogin("/login").user("john_doe@mail.com")
+                .password("password")).andExpect(authenticated());
+    }
+
+    @Test
+    public void userLoginFailed() throws Exception {
+        mockMvc.perform(formLogin("/login").user("user").password("wrongpassword"))
+                .andExpect(unauthenticated());
     }
 }
