@@ -83,6 +83,9 @@
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>${surefire.jacoco.args}</argLine>
+                    <excludes>
+                        <exclude>**/*E2ETests.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

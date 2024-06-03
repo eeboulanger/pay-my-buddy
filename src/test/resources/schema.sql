@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS user_connection (
   user_id INT NOT NULL,
   connected_user_id INT NOT NULL,
   PRIMARY KEY (user_id, connected_user_id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (connected_user_id) REFERENCES users(id));
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (connected_user_id) REFERENCES users(id) ON DELETE CASCADE);
 
 CREATE TABLE IF NOT EXISTS transaction (
   id INT AUTO_INCREMENT PRIMARY KEY,

@@ -19,10 +19,10 @@ public class SignUpService implements ISignUpService {
     private final Logger logger = LoggerFactory.getLogger(SignUpService.class);
     private final IValidationUtil validationUtil;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ClientService service;
+    private final UserService service;
 
     @Autowired
-    public SignUpService(IValidationUtil validationUtil, BCryptPasswordEncoder passwordEncoder, ClientService service) {
+    public SignUpService(IValidationUtil validationUtil, BCryptPasswordEncoder passwordEncoder, UserService service) {
         this.validationUtil = validationUtil;
         this.passwordEncoder = passwordEncoder;
         this.service = service;
@@ -30,7 +30,7 @@ public class SignUpService implements ISignUpService {
 
     @Override
     @Transactional
-    public boolean signUp(RegistrationForm form) throws RegistrationException {
+    public void signUp(RegistrationForm form) throws RegistrationException {
         // Validate form
         if (!validationUtil.validateEmail(form.getEmail())) {
             logger.error("Email is not valid");
@@ -41,20 +41,19 @@ public class SignUpService implements ISignUpService {
             throw new PasswordNotValidException();
         }
         // Check if the email already exists in the database
-        if (!service.getClientByEmail(form.getEmail()).isEmpty()) {
+        if (service.getUserByEmail(form.getEmail()).isPresent()) {
             logger.error("Failed to create new user. Email already exists in database");
             throw new EmailNotUniqueException();
         }
 
-        User user = mapToClient(form);
-        service.createClient(user);
-        return true;
+        User user = mapToUser(form);
+        service.saveUser(user);
     }
 
     /**
      * create client based on registration form
      */
-    private User mapToClient(RegistrationForm form) {
+    private User mapToUser(RegistrationForm form) {
         User user = new User();
         user.setEmail(form.getEmail());
         user.setUsername(form.getUsername());

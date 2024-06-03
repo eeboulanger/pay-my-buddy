@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class CustomUserDetailsServiceTest {
 
     @Mock
-    private ClientService service;
+    private UserService service;
 
     @InjectMocks
     private CustomUserDetailsService userDetailsService;
@@ -30,7 +30,7 @@ public class CustomUserDetailsServiceTest {
         User user = new User();
         user.setEmail(email);
         user.setPassword("password");
-        when(service.getClientByEmail(email)).thenReturn(Optional.of(user));
+        when(service.getUserByEmail(email)).thenReturn(Optional.of(user));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -39,16 +39,16 @@ public class CustomUserDetailsServiceTest {
         assertTrue(userDetails.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
 
-        verify(service, times(1)).getClientByEmail(email);
+        verify(service, times(1)).getUserByEmail(email);
     }
 
     @Test
     public void loadUserByUsername_WhenUserDoesNotExist_ShouldThrowUsernameNotFoundException() {
         String email = "nonexistent@mail.com";
-        when(service.getClientByEmail(email)).thenReturn(Optional.empty());
+        when(service.getUserByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(email));
 
-        verify(service, times(1)).getClientByEmail(email);
+        verify(service, times(1)).getUserByEmail(email);
     }
 }

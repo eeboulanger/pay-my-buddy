@@ -33,9 +33,7 @@ public class User {
     private Account account;
 
     @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade =
-                    CascadeType.ALL)
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_connection",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -18,12 +18,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SignUpServiceTests {
     @Mock
-    private ClientService clientService;
+    private UserService userService;
     @Mock
     private IValidationUtil validationUtil;
     @Mock
@@ -37,13 +37,15 @@ public class SignUpServiceTests {
         RegistrationForm client = new RegistrationForm();
         client.setEmail("john_doe@mail.com");
         client.setPassword("password");
-        when(clientService.getClientByEmail(client.getEmail())).thenReturn(Optional.empty());
+        when(userService.getUserByEmail(client.getEmail())).thenReturn(Optional.empty());
         when(validationUtil.validateEmail("john_doe@mail.com")).thenReturn(true);
         when(validationUtil.validatePassword("password")).thenReturn(true);
 
-        boolean result = service.signUp(client);
+        service.signUp(client);
 
-        assertTrue(result);
+        verify(userService, times(1)).getUserByEmail(client.getEmail());
+        verify(validationUtil, times(1)).validateEmail("john_doe@mail.com");
+        verify(validationUtil, times(1)).validatePassword("password");
     }
 
     @Test
@@ -55,9 +57,13 @@ public class SignUpServiceTests {
         User user = new User();
         when(validationUtil.validateEmail("john_doe@mail.com")).thenReturn(true);
         when(validationUtil.validatePassword("password")).thenReturn(true);
-        when(clientService.getClientByEmail(form.getEmail())).thenReturn(Optional.of(user));
+        when(userService.getUserByEmail(form.getEmail())).thenReturn(Optional.of(user));
 
         assertThrows(EmailNotUniqueException.class, () -> service.signUp(form));
+
+        verify(userService, times(1)).getUserByEmail(form.getEmail());
+        verify(validationUtil, times(1)).validateEmail("john_doe@mail.com");
+        verify(validationUtil, times(1)).validatePassword("password");
     }
 
     @Test
@@ -69,6 +75,10 @@ public class SignUpServiceTests {
         when(validationUtil.validateEmail("john_doe@mail.com")).thenReturn(false);
 
         assertThrows(EmailNotValidException.class, () -> service.signUp(form));
+
+        verify(userService, never()).getUserByEmail(form.getEmail());
+        verify(validationUtil, times(1)).validateEmail("john_doe@mail.com");
+        verify(validationUtil, never()).validatePassword("password");
     }
 
     @Test
@@ -81,5 +91,9 @@ public class SignUpServiceTests {
         when(validationUtil.validatePassword("password")).thenReturn(false);
 
         assertThrows(PasswordNotValidException.class, () -> service.signUp(form));
+
+        verify(userService, never()).getUserByEmail(form.getEmail());
+        verify(validationUtil, times(1)).validateEmail("john_doe@mail.com");
+        verify(validationUtil, times(1)).validatePassword("password");
     }
 }

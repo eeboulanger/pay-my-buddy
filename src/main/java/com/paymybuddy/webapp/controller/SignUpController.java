@@ -10,20 +10,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class ConnexionController implements IConnexionController {
-    private final Logger logger = LoggerFactory.getLogger(ConnexionController.class);
+public class SignUpController implements ISignUpController {
+    private final Logger logger = LoggerFactory.getLogger(SignUpController.class);
     @Autowired
     private ISignUpService service;
 
     @PostMapping("/public/signup")
-    public String createNewClient(@RequestBody RegistrationForm form) {
+    public String createNewUser(@RequestBody RegistrationForm form) {
         try {
-            if (service.signUp(form)) {
-                return "redirect:/index";
-            }
+            service.signUp(form);
+            return "redirect:/index";
         } catch (RegistrationException e) {
             logger.error(e.getMessage());
+            return "redirect:/error";
         }
-        return "redirect:/error";
     }
 }

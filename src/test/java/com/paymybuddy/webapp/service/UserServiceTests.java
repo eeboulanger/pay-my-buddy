@@ -19,7 +19,7 @@ public class UserServiceTests {
     @Mock
     private ClientRepository repository;
     @InjectMocks
-    private ClientService service;
+    private UserService service;
 
     @Test
     @DisplayName("Given there's a client with the email, then return the client")
@@ -29,7 +29,7 @@ public class UserServiceTests {
         user.setEmail(email);
         when(repository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        Optional<User> result = service.getClientByEmail(email);
+        Optional<User> result = service.getUserByEmail(email);
 
         assertTrue(result.isPresent());
         assertEquals(email, result.get().getEmail());
@@ -40,7 +40,7 @@ public class UserServiceTests {
     public void givenThereIsNoEmail_whenGetByEmail_thenReturnEmpty() {
         when(repository.findByEmail("john_doe@mail.com")).thenReturn(Optional.empty());
 
-        Optional<User> result = service.getClientByEmail("john_doe@mail.com");
+        Optional<User> result = service.getUserByEmail("john_doe@mail.com");
 
         assertTrue(result.isEmpty());
     }
@@ -52,7 +52,7 @@ public class UserServiceTests {
         User saved = new User();
         when(repository.save(user)).thenReturn(saved);
 
-        User result = service.createClient(user);
+        User result = service.saveUser(user);
 
         assertNotNull(result);
         assertEquals(saved, result);

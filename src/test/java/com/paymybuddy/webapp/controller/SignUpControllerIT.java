@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-test.properties")
-public class ConnexionControllerIT {
+public class SignUpControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,7 +37,7 @@ public class ConnexionControllerIT {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
-                .andExpect(status().is3xxRedirection()) //Expect new client to be created
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/index"));
     }
 
@@ -52,7 +52,7 @@ public class ConnexionControllerIT {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
-                .andExpect(status().is3xxRedirection()) //Expect new client to be created
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 
@@ -67,7 +67,7 @@ public class ConnexionControllerIT {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
-                .andExpect(status().is3xxRedirection()) //Expect new client to be created
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 
@@ -82,7 +82,7 @@ public class ConnexionControllerIT {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
-                .andExpect(status().is3xxRedirection()) //Expect new client to be created
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 

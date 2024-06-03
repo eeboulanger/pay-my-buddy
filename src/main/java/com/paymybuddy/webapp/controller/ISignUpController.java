@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * Any class that handles api for creating an account
  */
-public interface IConnexionController {
+public interface ISignUpController {
 
     @PostMapping("/public/signup")
-    String createNewClient(@RequestBody RegistrationForm form);
+    String createNewUser(@RequestBody RegistrationForm form);
 }

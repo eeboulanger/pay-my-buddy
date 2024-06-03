@@ -14,33 +14,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ConnexionControllerTest {
+public class SignUpControllerTest {
     @Mock
     private ISignUpService service;
     @InjectMocks
-    private ConnexionController controller;
+    private SignUpController controller;
 
     @Test
-    @DisplayName("Given there's no client with the given email, then create new client")
+    @DisplayName("Given there's no user with the given email, then create new client")
     public void signUpTest() throws RegistrationException {
         RegistrationForm form = new RegistrationForm();
-        when(service.signUp(form)).thenReturn(true);
 
-        String viewName = controller.createNewClient(form);
+        String viewName = controller.createNewUser(form);
 
         verify(service, times(1)).signUp(form);
-        assertEquals(viewName, "redirect:/index");
+        assertEquals( "redirect:/index", viewName);
     }
 
     @Test
-    @DisplayName("Given there's a client with the given email, then don't create new client")
+    @DisplayName("Given there's a user with the given email, then don't create new client")
     public void signUpFailsTest() throws RegistrationException {
         RegistrationForm form = new RegistrationForm();
-        when(service.signUp(form)).thenReturn(false);
+        doThrow(new RegistrationException("Failed to create user")).when(service).signUp(form);
 
-        String viewName = controller.createNewClient(form);
+        String viewName = controller.createNewUser(form);
 
         verify(service, times(1)).signUp(form);
-        assertEquals(viewName, "redirect:/error");
+        assertEquals( "redirect:/error", viewName);
     }
 }

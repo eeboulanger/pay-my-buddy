@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ClientService {
+public class UserService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public Optional<User> getClientByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return clientRepository.findByEmail(email);
     }
 
-    public User createClient(User user) {
+    public User saveUser(User user) {
         return clientRepository.save(user);
     }
 }

@@ -18,11 +18,11 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
     @Autowired
-    private ClientService service;
+    private UserService service;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = service.getClientByEmail(email)
+        User user = service.getUserByEmail(email)
                 .orElseThrow(() -> {
                     logger.error("Failed to find user with email: " + email);
                     return new UsernameNotFoundException("User not found with email: " + email);

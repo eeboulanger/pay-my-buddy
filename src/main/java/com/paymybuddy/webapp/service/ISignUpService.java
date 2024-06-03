@@ -7,5 +7,5 @@ import com.paymybuddy.webapp.exception.RegistrationException;
  * Any class that handles sign up
  */
 public interface ISignUpService {
-    boolean signUp(RegistrationForm client) throws RegistrationException;
+    void signUp(RegistrationForm client) throws RegistrationException;
 }
