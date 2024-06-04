@@ -1,7 +1,10 @@
 package com.paymybuddy.webapp.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,14 +22,19 @@ public class User {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
+    @NotBlank
+    @Size(min = 1, max = 50)
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Email
+    @NotBlank
+    @Column(name = "email", unique = true)
     private String email;
 
     @ToString.Exclude
-    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Column(name = "password")
     private String password;
 
     @OneToOne(mappedBy = "user")

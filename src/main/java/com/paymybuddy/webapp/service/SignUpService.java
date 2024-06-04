@@ -1,12 +1,8 @@
 package com.paymybuddy.webapp.service;
 
 import com.paymybuddy.webapp.dto.RegistrationForm;
-import com.paymybuddy.webapp.exception.EmailNotUniqueException;
-import com.paymybuddy.webapp.exception.EmailNotValidException;
-import com.paymybuddy.webapp.exception.PasswordNotValidException;
 import com.paymybuddy.webapp.exception.RegistrationException;
 import com.paymybuddy.webapp.model.User;
-import com.paymybuddy.webapp.utils.IValidationUtil;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SignUpService implements ISignUpService {
     private final Logger logger = LoggerFactory.getLogger(SignUpService.class);
-    private final IValidationUtil validationUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserService service;
 
     @Autowired
-    public SignUpService(IValidationUtil validationUtil, BCryptPasswordEncoder passwordEncoder, UserService service) {
-        this.validationUtil = validationUtil;
+    public SignUpService(BCryptPasswordEncoder passwordEncoder, UserService service) {
         this.passwordEncoder = passwordEncoder;
         this.service = service;
     }
@@ -31,21 +25,11 @@ public class SignUpService implements ISignUpService {
     @Override
     @Transactional
     public void signUp(RegistrationForm form) throws RegistrationException {
-        // Validate form
-        if (!validationUtil.validateEmail(form.getEmail())) {
-            logger.error("Email is not valid");
-            throw new EmailNotValidException();
-        }
-        if (!validationUtil.validatePassword(form.getPassword())) {
-            logger.error("Password is not valid");
-            throw new PasswordNotValidException();
-        }
         // Check if the email already exists in the database
         if (service.getUserByEmail(form.getEmail()).isPresent()) {
             logger.error("Failed to create new user. Email already exists in database");
-            throw new EmailNotUniqueException();
+            throw new RegistrationException("Email already exists in database");
         }
-
         User user = mapToUser(form);
         service.saveUser(user);
     }

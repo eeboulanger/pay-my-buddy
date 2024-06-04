@@ -21,7 +21,7 @@ public class SpringSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/users/signup", "/form", "/error", "/").permitAll()
                         .requestMatchers("/**").hasRole("USER"))
                 .formLogin(Customizer.withDefaults())
                 .build();

@@ -39,7 +39,7 @@ public class PaymentService implements IPaymentService {
         Authentication authUser = authenticationFacade.getAuthentication();
         User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found.");
+            return new UsernameNotFoundException("Authenticated user not found."); //Force login if not found
         });
 
         User receiver = userService.getUserById(moneyTransferDTO.getReceiverId()).orElseThrow(() -> {
@@ -53,17 +53,16 @@ public class PaymentService implements IPaymentService {
     }
 
     /**
-     * Validates the amount, the authenticated user, that the funds are sufficient and that the receiver is part of the users connections
-     * @throws PaymentException
+     * Validates that the funds are sufficient and that the receiver is part of the users connections
      */
     private void validateTransferDetails(User user, User receiver, double amount) throws PaymentException {
-        if (amount <= 0) {
-            logger.error("The amount must be greater than 0.");
-            throw new PaymentException("Amount not valid");
-        }
+        logger.debug("Validate transfer details; sender: " + user + " receiver: " + receiver
+                + " amount: " + amount);
+
         //Check that amount isn't greater than current balance
         if (user.getAccount().getBalance() < amount) {
-            logger.error("Failed to transfer money. The amount is higher than the current available balance.");
+            logger.error("Failed to transfer money. The amount is higher than the current available balance." +
+                    "Amount: "+ amount + " balance: "+user.getAccount().getBalance());
             throw new PaymentException("Funds are insufficient");
         }
         //Check that receiver is one of the users connections
@@ -75,16 +74,16 @@ public class PaymentService implements IPaymentService {
 
     /**
      * saves the transaction with a timestamp, debits the authenticated users account and credits the receivers account
-     * @param moneyTransferDTO
-     * @throws PaymentException
      */
     private void executeTransfer(MoneyTransferDTO moneyTransferDTO, User user, User receiver) throws PaymentException {
+        //Create transaction
         double amount = moneyTransferDTO.getAmount();
-
-
         Timestamp date = Timestamp.from(Instant.now());
         Transaction transaction = new Transaction(amount, moneyTransferDTO.getDescription(),
                 date, user, receiver);
+
+        logger.debug("Trying to execute transfer. Sender: " + user + " receiver: " + receiver
+                + " amount: " + amount + " description: " + moneyTransferDTO.getDescription() + " date: " + date);
         try {
             transactionService.saveTransaction(transaction);
             user.getAccount().debit(amount);

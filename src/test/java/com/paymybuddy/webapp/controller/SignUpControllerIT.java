@@ -27,13 +27,13 @@ public class SignUpControllerIT {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Given there's no client with the given email address, then create new client")
-    public void signUpTest() throws Exception {
+    @DisplayName("Given there's no user with the given email address, then create new user")
+    public void signUpSuccessTest() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "123@Abcd", "Maria");
+        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "ValidPassword@123", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/public/signup")
+        mockMvc.perform(post("/users/signup")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
@@ -42,13 +42,13 @@ public class SignUpControllerIT {
     }
 
     @Test
-    @DisplayName("Given there's a client with the given email address, then don't create new client")
-    public void signUpFailsTest() throws Exception {
+    @DisplayName("Given there's a user with the given email address, then don't create new user")
+    public void userAlreadyExists_shouldFailSignUp() throws Exception {
         //New user
         RegistrationForm form = new RegistrationForm("john_doe@mail.com", "password", "John");
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/public/signup")
+        mockMvc.perform(post("/users/signup")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
@@ -60,10 +60,10 @@ public class SignUpControllerIT {
     @DisplayName("Given the email address isn't valid, then show error")
     public void givenEmailIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doemail.com", "123@Abcd", "Maria");
+        RegistrationForm form = new RegistrationForm("invalid_email.com", "123@Abcd", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/public/signup")
+        mockMvc.perform(post("/users/signup")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))
@@ -75,10 +75,10 @@ public class SignUpControllerIT {
     @DisplayName("Given the password isn't valid, then show error")
     public void givenPasswordIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "AAAAAbcd", "Maria");
+        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "InvalidPassword", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
-        mockMvc.perform(post("/public/signup")
+        mockMvc.perform(post("/users/signup")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(form)))

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Hello Page</title>
 </head>
 <body>
-
+<h1 th:text="'Hello!'">Hello</h1>
+<!-- If using a model attribute -->
+<h2 th:text="${message}">Default Greeting Message</h2>
 </body>
 </html>

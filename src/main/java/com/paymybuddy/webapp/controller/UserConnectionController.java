@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class UserConnectionController implements IUserConnectionController {
+public class UserConnectionController {
     @Autowired
     private IUserConnectionService service;
 
-    @Override
     @PostMapping("/connections")
     public String addUserConnection(@RequestParam String email) {
         try {
