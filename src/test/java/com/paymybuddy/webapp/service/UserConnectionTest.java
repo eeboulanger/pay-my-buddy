@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.service;
 
+import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +39,7 @@ public class UserConnectionTest {
 
     @Test
     @DisplayName("Given user exists in database, when add user connection, then create new user connection and add to authenticated user")
-    public void addNewUserConnection() {
+    public void addNewUserConnection() throws UserNotFoundException {
         User authUser = new User();
 
         when(userService.getUserByEmail(email)).thenReturn(Optional.of(user));
@@ -57,7 +58,7 @@ public class UserConnectionTest {
     public void givenThereIsNoUserWithEmail_whenAddNewUserConnection_thenThrowException() {
         when(userService.getUserByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> service.addUserConnection(email));
+        assertThrows(UserNotFoundException.class, () -> service.addUserConnection(email));
 
         verify(userService).getUserByEmail(email);
         verify(authenticationFacade, never()).getAuthentication();

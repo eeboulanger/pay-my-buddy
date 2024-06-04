@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.controller;
 
+import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.service.UserConnectionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -41,7 +42,7 @@ public class UserConnectionControllerTest {
     @Test
     @WithMockUser(username="user", roles= "USER")
     public void addUserConnectionFailsTest() throws Exception {
-        doThrow(new UsernameNotFoundException("User not found")).when(service).addUserConnection(email);
+        doThrow(new UserNotFoundException("User not found")).when(service).addUserConnection(email);
 
         mockMvc.perform(post("/connections")
                         .with(csrf())

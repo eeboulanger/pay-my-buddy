@@ -1,7 +1,7 @@
 package com.paymybuddy.webapp.service;
 
 import com.paymybuddy.webapp.model.User;
-import com.paymybuddy.webapp.repository.ClientRepository;
+import com.paymybuddy.webapp.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,13 +17,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
     @Mock
-    private ClientRepository repository;
+    private UserRepository repository;
     @InjectMocks
     private UserService service;
 
     @Test
-    @DisplayName("Given there's a client with the email, then return the client")
-    public void getClientByEmailTest() {
+    @DisplayName("Given there's a user with the email, then return the user")
+    public void getUserByEmailTest() {
         User user = new User();
         String email = "john_doe@mail.com";
         user.setEmail(email);
@@ -36,7 +36,7 @@ public class UserServiceTests {
     }
 
     @Test
-    @DisplayName("Given there's no client with the email, then return empty")
+    @DisplayName("Given there's no user with the email, then return empty")
     public void givenThereIsNoEmail_whenGetByEmail_thenReturnEmpty() {
         when(repository.findByEmail("john_doe@mail.com")).thenReturn(Optional.empty());
 
@@ -46,7 +46,7 @@ public class UserServiceTests {
     }
 
     @Test
-    @DisplayName("Create client should save client in database and return client as an object")
+    @DisplayName("Create user should save client in database and return user as an object")
     public void createClientTest() {
         User user = new User();
         User saved = new User();
@@ -56,5 +56,27 @@ public class UserServiceTests {
 
         assertNotNull(result);
         assertEquals(saved, result);
+    }
+
+    @Test
+    @DisplayName("Given there's a user with the id, then return user")
+    public void getUserByIdTest() {
+        User user = new User();
+        user.setId(1);
+        when(repository.findById(1)).thenReturn(Optional.of(user));
+
+        Optional<User> result = service.getUserById(1);
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getId());
+    }
+    @Test
+    @DisplayName("Given there's no user with the id, then return empty")
+    public void givenThereIsNoUserWithId_whenGetByEmail_thenReturnEmpty() {
+        when(repository.findById(1)).thenReturn(Optional.empty());
+
+        Optional<User> result = service.getUserById(1);
+
+        assertTrue(result.isEmpty());
     }
 }

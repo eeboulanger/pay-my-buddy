@@ -1,9 +1,9 @@
 package com.paymybuddy.webapp.model;
 
+import com.paymybuddy.webapp.exception.PaymentException;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -17,7 +17,19 @@ public class Account {
     @Column(name = "balance", nullable = false)
     private double balance;
 
+    @ToString.Exclude
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public void debit(double amount) throws PaymentException {
+        if (balance < amount) {
+            throw new PaymentException("Funds are insufficient");
+        } else {
+            balance -= amount;
+        }
+    }
+    public void credit(double amount) {
+        balance += amount;
+    }
 }

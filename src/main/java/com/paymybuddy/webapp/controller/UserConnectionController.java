@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.controller;
 
+import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.service.IUserConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +19,7 @@ public class UserConnectionController implements IUserConnectionController {
         try {
             service.addUserConnection(email);
             return "redirect:/index";
-        } catch (UsernameNotFoundException e) {
+        } catch (UserNotFoundException e) {
             return "redirect:/error";
         }
     }

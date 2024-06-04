@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.service;
 
+import com.paymybuddy.webapp.exception.UserNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
@@ -7,5 +8,5 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public interface IUserConnectionService {
 
-    void addUserConnection(String email) throws UsernameNotFoundException;
+    void addUserConnection(String email) throws UsernameNotFoundException, UserNotFoundException;
 }

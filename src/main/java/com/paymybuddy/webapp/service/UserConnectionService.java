@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.service;
 
+import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.model.User;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -23,18 +24,18 @@ public class UserConnectionService implements IUserConnectionService {
      */
     @Override
     @Transactional
-    public void addUserConnection(String email) throws UsernameNotFoundException {
+    public void addUserConnection(String email) throws UserNotFoundException {
         //Check if user exists in database
         User userConnection = userService.getUserByEmail(email).orElseThrow(() -> {
             logger.error("Failed to create new user connection. No user with email: " + email + " was found.");
-            throw new UsernameNotFoundException("No user found with email: " + email);
+            return new UserNotFoundException("No user found with email: " + email);
         });
 
         //Get authenticated user id
         Authentication authUser = authenticationFacade.getAuthentication();
         User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            throw  new UsernameNotFoundException("Authenticated user not found.");
+            return new UsernameNotFoundException("Authenticated user not found.");
         });
 
         user.getConnections().add(userConnection);

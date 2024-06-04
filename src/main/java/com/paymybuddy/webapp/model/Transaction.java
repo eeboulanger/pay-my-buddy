@@ -30,4 +30,15 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver", referencedColumnName = "id")
     private User receiver;
+
+    public Transaction() {
+    }
+
+    public Transaction(double amount, String description, Timestamp date, User sender, User receiver) {
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+        this.sender = sender;
+        this.receiver = receiver;
+    }
 }
