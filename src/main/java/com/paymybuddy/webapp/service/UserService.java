@@ -23,4 +23,8 @@ public class UserService implements IUserService {
     public Optional<User> getUserById(int userId) {
         return userRepository.findById(userId);
     }
+
+    public void deleteById(int id) {
+        userRepository.deleteById(id);
+    }
 }

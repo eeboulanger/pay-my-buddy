@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SignUpServiceTests {
+public class UserProfileServiceTests {
     @Mock
     private UserService userService;
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks
-    private SignUpService service;
+    private UserProfileService service;
 
     @Test
     @DisplayName("Given there is no client with the given email address, when sign up new client, then return true")

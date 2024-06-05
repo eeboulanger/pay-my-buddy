@@ -22,7 +22,9 @@ public class SpringSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/signup", "/form", "/error", "/").permitAll()
-                        .requestMatchers("/**").hasRole("USER"))
+                        .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/**").hasRole("USER")
+                        .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .build();
     }

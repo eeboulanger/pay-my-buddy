@@ -35,7 +35,7 @@ public class UserConnectionService implements IUserConnectionService {
         Authentication authUser = authenticationFacade.getAuthentication();
         User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found.");
+            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
         });
 
         user.getConnections().add(userConnection);

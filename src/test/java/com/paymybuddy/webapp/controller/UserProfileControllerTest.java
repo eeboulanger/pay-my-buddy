@@ -25,9 +25,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = SignUpController.class)
+@WebMvcTest(controllers = UserProfileController.class)
 @Import(SpringSecurityConfiguration.class)
-public class SignUpControllerTest {
+public class UserProfileControllerTest {
     @MockBean
     private CustomUserDetailsService userDetailsService;
     @MockBean
@@ -39,7 +39,7 @@ public class SignUpControllerTest {
     @MockBean
     private ISignUpService service;
     @InjectMocks
-    private SignUpController controller;
+    private UserProfileController controller;
     private RegistrationForm form;
     private final ObjectMapper mapper=new ObjectMapper();
 

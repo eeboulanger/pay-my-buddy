@@ -72,22 +72,6 @@ public class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("Given the amount is 0, when transfer money, then throw exception")
-    public void transferMoney_whenAmountZero_thenThrowException() {
-        dto.setAmount(0);
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
-        when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
-
-        assertThrows(PaymentException.class, () -> paymentService.transferMoney(dto));
-
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
-        verify(userService, times(1)).getUserById(2);
-        verify(transactionService, never()).saveTransaction(any(Transaction.class));
-    }
-
-    @Test
     @DisplayName("Authenticated user not found should throw exception")
     public void transferMoney_whenAuthenticatedUserNotFound_thenThrowException() {
         when(authenticationFacade.getAuthentication()).thenReturn(authentication);

@@ -9,7 +9,11 @@ import java.util.Optional;
  */
 public interface IUserService {
     Optional<User> getUserByEmail(String email);
+
     Optional<User> getUserById(int userId);
+
     User saveUser(User user);
+
+    void deleteById(int userId);
 
 }

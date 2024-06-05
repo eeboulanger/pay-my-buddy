@@ -2,6 +2,7 @@ package com.paymybuddy.webapp.model;
 
 import com.paymybuddy.webapp.exception.PaymentException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
@@ -14,7 +15,8 @@ public class Account {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "balance", nullable = false)
+    @NotNull
+    @Column(name = "balance")
     private double balance;
 
     @ToString.Exclude
@@ -29,6 +31,7 @@ public class Account {
             balance -= amount;
         }
     }
+
     public void credit(double amount) {
         balance += amount;
     }

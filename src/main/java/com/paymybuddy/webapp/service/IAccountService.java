@@ -9,4 +9,8 @@ import java.util.Optional;
  */
 public interface IAccountService {
     Optional<Account> getUserAccount(int userId);
+
+    Account saveAccount(Account newAccount);
+
+    void deleteAccount(int id);
 }

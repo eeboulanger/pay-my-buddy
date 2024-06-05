@@ -10,7 +10,13 @@ public class TransactionService implements ITransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Override
     public Transaction saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public void deleteTransaction(int id) {
+        transactionRepository.deleteById(id);
     }
 }

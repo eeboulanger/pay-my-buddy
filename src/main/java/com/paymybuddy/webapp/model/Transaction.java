@@ -1,6 +1,9 @@
 package com.paymybuddy.webapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -14,9 +17,12 @@ public class Transaction {
     @Column(name = "id")
     private int id;
 
+    @NotNull
+    @Min(value = 1, message = "Minimal amount is 1")
     @Column(name = "amount", nullable = false)
     private double amount;
 
+    @NotEmpty
     @Column(name = "description", nullable = false)
     private String description;
 

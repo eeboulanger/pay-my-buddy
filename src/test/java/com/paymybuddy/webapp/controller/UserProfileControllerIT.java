@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-test.properties")
-public class SignUpControllerIT {
+public class UserProfileControllerIT {
     @Autowired
     private MockMvc mockMvc;
 

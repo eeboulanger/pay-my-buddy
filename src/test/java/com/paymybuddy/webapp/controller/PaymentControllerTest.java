@@ -1,10 +1,10 @@
 package com.paymybuddy.webapp.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.webapp.dto.MoneyTransferDTO;
 import com.paymybuddy.webapp.exception.PaymentException;
 import com.paymybuddy.webapp.service.IPaymentService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +29,20 @@ public class PaymentControllerTest {
     private IPaymentService paymentService;
     @InjectMocks
     private PaymentController controller;
+    private MoneyTransferDTO dto;
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    @BeforeEach
+    public void setUp() {
+        dto = new MoneyTransferDTO();
+        dto.setAmount(10);
+        dto.setReceiverId(22);
+        dto.setDescription("Birthday");
+    }
 
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void transferMoneyTest() throws Exception {
-        MoneyTransferDTO dto = new MoneyTransferDTO();
-        ObjectMapper mapper = new ObjectMapper();
-
         mockMvc.perform(post("/transactions")
                         .with(csrf())
                         .content(mapper.writeValueAsString(dto))
@@ -49,8 +56,6 @@ public class PaymentControllerTest {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void transferMoneyFailsTest() throws Exception {
-        MoneyTransferDTO dto = new MoneyTransferDTO();
-        ObjectMapper mapper = new ObjectMapper();
         doThrow(PaymentException.class).when(paymentService).transferMoney(dto);
 
         mockMvc.perform(post("/transactions")
@@ -61,5 +66,18 @@ public class PaymentControllerTest {
                 .andExpect(redirectedUrl("/error"));
 
         verify(paymentService, times(1)).transferMoney(dto);
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    public void invalidTransferDetails_shouldReturnError() throws Exception {
+       dto.setAmount(0); //invalid amount
+
+        mockMvc.perform(post("/transactions")
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(dto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/error"));
     }
 }

@@ -6,5 +6,7 @@ import com.paymybuddy.webapp.model.Transaction;
  * Any class that handles transactions operations
  */
 public interface ITransactionService {
-    public Transaction saveTransaction(Transaction transaction);
+    Transaction saveTransaction(Transaction transaction);
+
+    void deleteTransaction(int i);
 }
