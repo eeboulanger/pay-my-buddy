@@ -1,9 +1,9 @@
 package com.paymybuddy.webapp.controller;
 
-import com.paymybuddy.webapp.dto.RegistrationForm;
+import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.exception.RegistrationException;
 import com.paymybuddy.webapp.service.ISignUpService;
-import com.paymybuddy.webapp.service.IUserService;
+import com.paymybuddy.webapp.service.IUserProfileService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +18,10 @@ public class UserProfileController {
     @Autowired
     private ISignUpService service;
     @Autowired
-    private IUserService userService;
+    private IUserProfileService profileService;
 
     @PostMapping("/users/signup")
-    public String createNewUser(@Valid @RequestBody RegistrationForm form, BindingResult bindingResult) {
+    public String createNewUser(@Valid @RequestBody UserDTO form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/error";
         } else {
@@ -35,8 +35,18 @@ public class UserProfileController {
         }
     }
 
+    @PutMapping("/users")
+    public String updateUser(@Valid @RequestBody UserDTO user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "redirect:/error";
+        } else {
+            profileService.updateUser(user);
+            return "redirect:/index";
+        }
+    }
+
     @DeleteMapping("/admin/users")
-    public void deleteUser(@RequestParam("id") int id){
-        userService.deleteById(id);
+    public void deleteUser(@RequestParam("id") int id) {
+        profileService.deleteUser(id);
     }
 }

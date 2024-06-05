@@ -1,7 +1,7 @@
 package com.paymybuddy.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paymybuddy.webapp.dto.RegistrationForm;
+import com.paymybuddy.webapp.dto.UserDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserProfileControllerIT {
     @DisplayName("Given there's no user with the given email address, then create new user")
     public void signUpSuccessTest() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "ValidPassword@123", "Maria");
+        UserDTO form = new UserDTO("maria_doe@mail.com", "ValidPassword@123", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/users/signup")
@@ -45,7 +45,7 @@ public class UserProfileControllerIT {
     @DisplayName("Given there's a user with the given email address, then don't create new user")
     public void userAlreadyExists_shouldFailSignUp() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("john_doe@mail.com", "password", "John");
+        UserDTO form = new UserDTO("john_doe@mail.com", "password", "John");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/users/signup")
@@ -60,7 +60,7 @@ public class UserProfileControllerIT {
     @DisplayName("Given the email address isn't valid, then show error")
     public void givenEmailIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("invalid_email.com", "123@Abcd", "Maria");
+        UserDTO form = new UserDTO("invalid_email.com", "123@Abcd", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/users/signup")
@@ -75,7 +75,7 @@ public class UserProfileControllerIT {
     @DisplayName("Given the password isn't valid, then show error")
     public void givenPasswordIsNotValid_whenCreateNewClient_thenShowError() throws Exception {
         //New user
-        RegistrationForm form = new RegistrationForm("maria_doe@mail.com", "InvalidPassword", "Maria");
+        UserDTO form = new UserDTO("maria_doe@mail.com", "InvalidPassword", "Maria");
         ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(post("/users/signup")

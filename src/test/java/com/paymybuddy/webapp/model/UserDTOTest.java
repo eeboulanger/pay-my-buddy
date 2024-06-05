@@ -1,6 +1,6 @@
 package com.paymybuddy.webapp.model;
 
-import com.paymybuddy.webapp.dto.RegistrationForm;
+import com.paymybuddy.webapp.dto.UserDTO;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -15,11 +15,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(Enclosed.class)
-public class RegistrationFormTest {
+public class UserDTOTest {
 
     @Test
     public void testSettersAndGetters() {
-        RegistrationForm form = new RegistrationForm();
+        UserDTO form = new UserDTO();
         form.setPassword("password");
         form.setUsername("John");
         form.setEmail("john_doe@mail.com");
@@ -32,7 +32,7 @@ public class RegistrationFormTest {
     @Test
     public void testToStringMethod() {
         // Create an instance with specific attributes
-        RegistrationForm form = new RegistrationForm("jane.doe@example.com",
+        UserDTO form = new UserDTO("jane.doe@example.com",
                 "secret", "Jane");
 
         // Assert toString does not include password for security reasons
@@ -43,8 +43,8 @@ public class RegistrationFormTest {
     @Test
     public void testEqualsAndHashCode() {
         // Create two identical instances
-        RegistrationForm form1 = new RegistrationForm("jane.doe@example.com", "secret", "Jane");
-        RegistrationForm form2 = new RegistrationForm("jane.doe@example.com", "secret", "Jane");
+        UserDTO form1 = new UserDTO("jane.doe@example.com", "secret", "Jane");
+        UserDTO form2 = new UserDTO("jane.doe@example.com", "secret", "Jane");
 
         // Assert these two are considered equal and have the same hash code
         assertThat(form1).isEqualTo(form2);
@@ -61,7 +61,7 @@ public class RegistrationFormTest {
     @Nested
     public class ValidateTests {
 
-        private RegistrationForm form;
+        private UserDTO form;
         private static Validator validator;
 
         @BeforeAll

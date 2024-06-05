@@ -2,12 +2,10 @@ package com.paymybuddy.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
-import com.paymybuddy.webapp.dto.RegistrationForm;
+import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.exception.RegistrationException;
 import com.paymybuddy.webapp.repository.UserRepository;
-import com.paymybuddy.webapp.service.CustomUserDetailsService;
-import com.paymybuddy.webapp.service.ISignUpService;
-import com.paymybuddy.webapp.service.UserService;
+import com.paymybuddy.webapp.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,21 +29,23 @@ public class UserProfileControllerTest {
     @MockBean
     private CustomUserDetailsService userDetailsService;
     @MockBean
-    private UserService userService;
+    private IUserService userService;
     @MockBean
     private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private ISignUpService service;
+    @MockBean
+    private IUserProfileService userProfileService;
     @InjectMocks
     private UserProfileController controller;
-    private RegistrationForm form;
+    private UserDTO form;
     private final ObjectMapper mapper=new ObjectMapper();
 
     @BeforeEach
     public void setUp() {
-        form = new RegistrationForm();
+        form = new UserDTO();
         form.setEmail("john_doe@mail.com");
         form.setPassword("ValidPassword@123");
         form.setUsername("john_doe");
@@ -67,7 +67,7 @@ public class UserProfileControllerTest {
     @Test
     @DisplayName("Invalid password when sign up should return error")
     public void givenInvalidPassword_whenSignUp_thenReturnError() throws Exception {
-        RegistrationForm form = new RegistrationForm();
+        UserDTO form = new UserDTO();
         form.setEmail("john_doe@mail.com");
         form.setPassword("unvalid_password");
         form.setUsername("john_doe");
@@ -84,7 +84,7 @@ public class UserProfileControllerTest {
     @Test
     @DisplayName("Invalid email when signup should return error")
     public void givenInvalidEmail_whenSignUp_thenReturnError() throws Exception {
-        RegistrationForm form = new RegistrationForm();
+        UserDTO form = new UserDTO();
         form.setEmail("notvalidmail.com");
         form.setPassword("ValidPassword@123");
         form.setUsername("john_doe");
@@ -101,7 +101,7 @@ public class UserProfileControllerTest {
     @Test
     @DisplayName("Given user already exists when signup then return error")
     public void userAlreadyExists_shouldReturnError() throws Exception {
-        RegistrationForm form = new RegistrationForm();
+        UserDTO form = new UserDTO();
         form.setEmail("john_doe@gmail.com");
         form.setPassword("ValidPassword@123");
         form.setUsername("john_doe");

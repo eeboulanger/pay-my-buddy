@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-public class RegistrationForm {
+public class UserDTO {
     @Email
     @NotBlank
     private String email;
@@ -21,10 +21,10 @@ public class RegistrationForm {
     @Size(min=1, max=50)
     private String username;
 
-    public RegistrationForm() {
+    public UserDTO() {
     }
 
-    public RegistrationForm(String email, String password, String username) {
+    public UserDTO(String email, String password, String username) {
         this.email = email;
         this.password = password;
         this.username = username;
