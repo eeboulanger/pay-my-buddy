@@ -25,8 +25,7 @@ public class SpringSecurityConfiguration {
                         .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
                         .requestMatchers("/**").hasRole("USER")
                         .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults())
-                .build();
+                .formLogin(Customizer.withDefaults()).oauth2Login(Customizer.withDefaults()).build();
     }
 
     @Bean

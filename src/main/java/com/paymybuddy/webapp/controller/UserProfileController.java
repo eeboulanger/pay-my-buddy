@@ -35,6 +35,11 @@ public class UserProfileController {
         }
     }
 
+    @GetMapping("/login/oauth2/code/google")
+    public String getOauth(){
+        return "redirect:/";
+    }
+
     @PutMapping("/users")
     public String updateUser(@Valid @RequestBody UserDTO user, BindingResult result) {
         if (result.hasErrors()) {
@@ -49,4 +54,5 @@ public class UserProfileController {
     public void deleteUser(@RequestParam("id") int id) {
         profileService.deleteUser(id);
     }
+
 }
