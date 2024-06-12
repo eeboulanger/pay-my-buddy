@@ -7,17 +7,19 @@ import lombok.ToString;
 @Data
 public class UserDTO {
     @Email
+    @Pattern(regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$",
+            message = "Veuillez saisir un format mail valid")
     @NotBlank
     private String email;
 
     @ToString.Exclude
     @NotBlank
-    @Size(min=8, max = 50, message = "Password must be between 8 and 30 characters")
+    @Size(min=8, max = 50)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$",
-            message = "Password most contain at least one upper case letter and one special character")
+            message = "Le mot de passe doit contenir au moins une lettre majuscule et un caractère spécial")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Le nom d'utilisateur ne doit pas être vide")
     @Size(min=1, max=50)
     private String username;
 

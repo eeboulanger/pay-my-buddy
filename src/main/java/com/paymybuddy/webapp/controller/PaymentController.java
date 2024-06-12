@@ -16,7 +16,7 @@ public class PaymentController {
     @Autowired
     private IPaymentService paymentService;
 
-    @PostMapping("/transactions")
+    @PostMapping("/payment")
     public String transferMoney(@Valid @RequestBody MoneyTransferDTO moneyTransfer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/error";

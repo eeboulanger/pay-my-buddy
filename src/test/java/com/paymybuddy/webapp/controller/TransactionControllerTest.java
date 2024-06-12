@@ -56,7 +56,7 @@ public class TransactionControllerTest {
 
         when(transactionService.saveTransaction(transaction)).thenReturn(newTransaction);
 
-        mockMvc.perform(post("/admin/transactions")
+        mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(transaction))
                         .with(csrf()))
@@ -74,7 +74,7 @@ public class TransactionControllerTest {
 
         when(transactionService.saveTransaction(transaction)).thenReturn(newTransaction);
 
-        mockMvc.perform(post("/admin/transactions")
+        mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(transaction))
                         .with(csrf()))
@@ -87,7 +87,7 @@ public class TransactionControllerTest {
     @DisplayName("Given authenticated as admin when delete transaction should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void deleteAsAdmin_shouldSucceedTest() throws Exception {
-        mockMvc.perform(delete("/admin/transactions")
+        mockMvc.perform(delete("/transactions")
                         .param("id", "1")
                         .with(csrf()))
                 .andExpect(status().isOk());
@@ -98,7 +98,7 @@ public class TransactionControllerTest {
     @DisplayName("Given authenticated as user when deleting a transaction should fail")
     @WithMockUser(username = "user", roles = "USER")
     public void delete_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        mockMvc.perform(delete("/admin/transactions")
+        mockMvc.perform(delete("/transactions")
                         .param("id", "1")
                         .with(csrf()))
                 .andExpect(status().is4xxClientError());

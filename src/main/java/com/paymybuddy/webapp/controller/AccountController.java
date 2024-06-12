@@ -4,6 +4,8 @@ import com.paymybuddy.webapp.model.Account;
 import com.paymybuddy.webapp.service.IAccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,17 +14,21 @@ public class AccountController {
     @Autowired
     private IAccountService accountService;
 
-    @PostMapping("/admin/accounts")
-    public Account newAccount(@Valid @RequestBody Account newAccount){
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/accounts")
+    public Account createAccount(@Valid @RequestBody Account newAccount) {
         return accountService.saveAccount(newAccount);
     }
 
-    @PutMapping("/admin/accounts")
-    public Account updateAccount(@Valid @RequestBody Account newAccount){
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/accounts")
+    public Account updateAccount(@Valid @RequestBody Account newAccount) {
         return accountService.saveAccount(newAccount);
     }
-    @DeleteMapping("/admin/accounts")
-    public void deleteAccount(@RequestParam("id") int id){
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/accounts")
+    public void deleteAccount(@RequestParam("id") int id) {
         accountService.deleteAccount(id);
     }
 }

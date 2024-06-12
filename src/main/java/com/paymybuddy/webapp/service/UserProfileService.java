@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserProfileService implements IUserProfileService {
 
-    private final Logger logger = LoggerFactory.getLogger(UserConnectionService.class);
+    private final Logger logger = LoggerFactory.getLogger(UserProfileService.class);
     @Autowired
     private IAuthenticationFacade authenticationFacade;
     @Autowired
@@ -22,34 +22,53 @@ public class UserProfileService implements IUserProfileService {
     @Autowired
     private IUserService userService;
 
+    /**
+     * Checks if user details email, password and username have been updated and saves the details to database
+     * @param updatedUser are the user details retrieved from the form
+     */
     @Override
     @Transactional
     public void updateUser(UserDTO updatedUser) {
-        logger.debug("Retrieving authenticated user details");
-
-        Authentication authUser = authenticationFacade.getAuthentication();
-        User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
-            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
-        });
+        User user = getAuthUser();
 
         if (!updatedUser.getEmail().equals(user.getEmail())) {
-            logger.debug("Updating user email");
+            logger.info("Updating user email");
             user.setEmail(updatedUser.getEmail());
         }
         if (!passwordEncoder.matches(updatedUser.getPassword(), user.getPassword())) {
-            logger.debug("Updating user password");
+            logger.info("Updating user password");
             user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         if (!updatedUser.getUsername().equals(user.getUsername())) {
-            logger.debug("Updating username");
+            logger.info("Updating username");
             user.setUsername(updatedUser.getUsername());
         }
         userService.saveUser(user);
     }
 
-    public void deleteUser(int id) {
-        logger.debug("Deleting user with id: " + id);
-        userService.deleteById(id);
+    /**
+     *
+     * @return user details email and user name
+     */
+    public UserDTO getCurrentUser() {
+        UserDTO dto = new UserDTO();
+        User user = getAuthUser();
+
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+        return dto;
+    }
+
+    /**
+     * Get user details for the authenticated user
+     * @return
+     */
+    private User getAuthUser() {
+        Authentication authUser = authenticationFacade.getAuthentication();
+        logger.debug("Get current authenticated user: " + authUser.getName());
+        return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
+            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
+            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
+        });
     }
 }

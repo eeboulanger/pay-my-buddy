@@ -69,10 +69,4 @@ public class UserProfileServiceTest {
         verify(facade).getAuthentication();
         verify(userService, times(1)).getUserByEmail(authentication.getName());
     }
-
-    @Test
-    public void deleteUserSuccessTest() {
-        assertDoesNotThrow(() -> profileService.deleteUser(1));
-        verify(userService, times(1)).deleteById(1);
-    }
 }

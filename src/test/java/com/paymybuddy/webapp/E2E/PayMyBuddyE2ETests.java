@@ -57,7 +57,7 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
@@ -75,7 +75,7 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
@@ -93,7 +93,7 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
@@ -111,7 +111,7 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))

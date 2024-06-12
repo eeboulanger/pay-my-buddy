@@ -3,9 +3,9 @@ package com.paymybuddy.webapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.model.Account;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.repository.UserRepository;
 import com.paymybuddy.webapp.service.CustomUserDetailsService;
-import com.paymybuddy.webapp.service.IAccountService;
 import com.paymybuddy.webapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,15 +20,16 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = AccountController.class)
+@WebMvcTest(controllers = UserController.class)
 @Import({SpringSecurityConfiguration.class})
-public class AccountControllerTest {
+public class UserControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -37,97 +38,99 @@ public class AccountControllerTest {
     private UserService userService;
     @MockBean
     private UserRepository userRepository;
-    @MockBean
-    private IAccountService accountService;
     @InjectMocks
-    private AccountController controller;
-    private Account account;
+    private UserController controller;
     private final ObjectMapper mapper = new ObjectMapper();
+    private User user;
+
     @BeforeEach
     public void setUp(){
-        account = new Account();
+        user=new User();
+        user.setUsername("Jane");
+        user.setEmail("jane_doe@mail.com");
+        user.setPassword("1234@Valid");
     }
 
     @Test
-    @DisplayName("Given authenticated as admin when create new account should succeed")
+    @DisplayName("Given authenticated as admin when create new should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void createNewAccountAsAdmin_shouldSucceedTest() throws Exception {
-        when(accountService.saveAccount(account)).thenReturn(account);
 
-        mockMvc.perform(post("/accounts")
+        when(userService.saveUser(user)).thenReturn(user);
+
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(account))
+                        .content(mapper.writeValueAsString(user))
                         .with(csrf()))
                 .andExpect(status().isOk());
-        verify(accountService, times(1)).saveAccount(account);
+        verify(userService, times(1)).saveUser(user);
     }
 
     @Test
-    @DisplayName("Given authenticated as user when creating a new account should fail")
+    @DisplayName("Given authenticated as user when creating a new user should fail")
     @WithMockUser(username = "user", roles = "USER")
-    public void createNewAccount_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        when(accountService.saveAccount(account)).thenReturn(account);
+    public void createNewUser_whenAuthenticatedAsUser_shouldFail() throws Exception {
+        when(userService.saveUser(user)).thenReturn(user);
 
-        mockMvc.perform(post("/accounts")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(account))
+                        .content(mapper.writeValueAsString(user))
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
-        verify(accountService, never()).saveAccount(account);
+                .andExpect(status().isForbidden());
+        verify(userService, never()).saveUser(user);
     }
 
+
     @Test
-    @DisplayName("Given authenticated as admin when delete new account should succeed")
+    @DisplayName("Given authenticated as admin when delete user should succeed")
     @WithMockUser(roles="ADMIN")
-    public void deleteAccountAsAdmin_shouldSucceedTest() throws Exception {
-        mockMvc.perform(delete("/accounts")
+    public void deleteUserAsAdmin_shouldSucceedTest() throws Exception {
+        mockMvc.perform(delete("/users")
                         .param("id", "1")
                         .with(csrf()))
                 .andExpect(status().isOk());
-        verify(accountService, times(1)).deleteAccount(1);
+        verify(userService, times(1)).deleteById(1);
     }
 
     @Test
-    @DisplayName("Given authenticated as user when deleting an account should fail")
+    @DisplayName("Given authenticated as user when deleting a user should fail")
     @WithMockUser(username = "user", roles = "USER")
-    public void deleteAccount_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        mockMvc.perform(delete("/accounts")
+    public void deleteUser_whenAuthenticatedAsUser_shouldFail() throws Exception {
+        mockMvc.perform(delete("/users")
                         .param("id", "1")
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isForbidden());
 
-        verify(accountService, never()).deleteAccount(1);
+        verify(userService, never()).deleteById(1);
     }
 
     @Test
-    @DisplayName("Given authenticated as admin when update account should succeed")
+    @DisplayName("Given authenticated as admin when update user should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void updateAccountAsAdmin_shouldSucceedTest() throws Exception {
-        account.setId(1);
-        account.setBalance(10.00);
-        when(accountService.saveAccount(account)).thenReturn(account);
+    public void updateUserAsAdmin_shouldSucceedTest() throws Exception {
+        when(userService.saveUser(user)).thenReturn(user);
 
-        mockMvc.perform(put("/accounts")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(account))
+                        .content(mapper.writeValueAsString(user))
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(accountService, times(1)).saveAccount(account);
+        verify(userService, times(1)).saveUser(user);
     }
 
     @Test
-    @DisplayName("Given authenticated as user when update an account should fail")
+    @DisplayName("Given authenticated as user when update a user should fail")
     @WithMockUser(username = "user", roles = "USER")
-    public void updateAccount_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        when(accountService.saveAccount(account)).thenReturn(account);
+    public void updateUser_whenAuthenticatedAsUser_shouldFail() throws Exception {
+        when(userService.saveUser(user)).thenReturn(user);
 
-        mockMvc.perform(put("/accounts")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(account))
+                        .content(mapper.writeValueAsString(user))
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isForbidden());
 
-        verify(accountService, never()).saveAccount(account);
+        verify(userService, never()).saveUser(user);
     }
 }

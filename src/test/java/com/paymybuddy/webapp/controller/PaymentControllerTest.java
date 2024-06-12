@@ -43,7 +43,7 @@ public class PaymentControllerTest {
     @Test
     @WithMockUser(username = "user", roles = "USER")
     public void transferMoneyTest() throws Exception {
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .content(mapper.writeValueAsString(dto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -58,7 +58,7 @@ public class PaymentControllerTest {
     public void transferMoneyFailsTest() throws Exception {
         doThrow(PaymentException.class).when(paymentService).transferMoney(dto);
 
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .content(mapper.writeValueAsString(dto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -73,7 +73,7 @@ public class PaymentControllerTest {
     public void invalidTransferDetails_shouldReturnError() throws Exception {
        dto.setAmount(0); //invalid amount
 
-        mockMvc.perform(post("/transactions")
+        mockMvc.perform(post("/payment")
                         .with(csrf())
                         .content(mapper.writeValueAsString(dto))
                         .contentType(MediaType.APPLICATION_JSON))
