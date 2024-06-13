@@ -5,6 +5,8 @@ import com.paymybuddy.webapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TransactionService implements ITransactionService {
     @Autowired
@@ -18,5 +20,10 @@ public class TransactionService implements ITransactionService {
     @Override
     public void deleteTransaction(int id) {
         transactionRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Transaction> getUserTransactions(int id) {
+        return transactionRepository.getTransactionsByUserId(id);
     }
 }

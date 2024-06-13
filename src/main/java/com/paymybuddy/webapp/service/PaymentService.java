@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class PaymentService implements IPaymentService {
@@ -36,11 +38,7 @@ public class PaymentService implements IPaymentService {
     @Transactional
     public void transferMoney(MoneyTransferDTO moneyTransferDTO) throws UsernameNotFoundException, PaymentException {
         //Get authenticated user id
-        Authentication authUser = authenticationFacade.getAuthentication();
-        User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
-            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force login if not found
-        });
+        User user = getCurrentUser();
 
         User receiver = userService.getUserById(moneyTransferDTO.getReceiverId()).orElseThrow(() -> {
             logger.error("Failed to find receiver: No user with id " + moneyTransferDTO.getReceiverId() + " was found.");
@@ -50,6 +48,14 @@ public class PaymentService implements IPaymentService {
         validateTransferDetails(user, receiver, moneyTransferDTO.getAmount());
 
         executeTransfer(moneyTransferDTO, user, receiver);
+    }
+
+    private User getCurrentUser() {
+        Authentication authUser = authenticationFacade.getAuthentication();
+        return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
+            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
+            return new UsernameNotFoundException("Authenticated user not found."); //Force login if not found
+        });
     }
 
     /**
@@ -62,7 +68,7 @@ public class PaymentService implements IPaymentService {
         //Check that amount isn't greater than current balance
         if (user.getAccount().getBalance() < amount) {
             logger.error("Failed to transfer money. The amount is higher than the current available balance." +
-                    "Amount: "+ amount + " balance: "+user.getAccount().getBalance());
+                    "Amount: " + amount + " balance: " + user.getAccount().getBalance());
             throw new PaymentException("Funds are insufficient");
         }
         //Check that receiver is one of the users connections
@@ -82,7 +88,7 @@ public class PaymentService implements IPaymentService {
         Transaction transaction = new Transaction(amount, moneyTransferDTO.getDescription(),
                 date, user, receiver);
 
-        logger.debug("Trying to execute transfer. Sender: " + user + " receiver: " + receiver
+        logger.debug("Attempt to execute transfer. Sender: " + user + " receiver: " + receiver
                 + " amount: " + amount + " description: " + moneyTransferDTO.getDescription() + " date: " + date);
         try {
             transactionService.saveTransaction(transaction);
@@ -95,5 +101,24 @@ public class PaymentService implements IPaymentService {
                     user.getId(), receiver.getId(), amount, e.getMessage(), e);
             throw new PaymentException("Failed to transfer money: " + e.getMessage());
         }
+    }
+
+    /**
+     * Get users previous transactions and identify those with user as receiver
+     *
+     * @return a list of transactions from and to the user order by date
+     */
+    public List<Transaction> getUserTransactions() {
+        User user = getCurrentUser();
+        List<Transaction> transactions = transactionService.getUserTransactions(user.getId());
+        transactions.stream().filter(transaction ->
+                        transaction.getReceiver().getEmail().equals(user.getEmail()))
+                .forEach(transaction -> transaction.getReceiver().setUsername("Me"));
+        return transactions;
+    }
+
+    public Set<User> getUserConnections() {
+        User user = getCurrentUser();
+        return user.getConnections();
     }
 }

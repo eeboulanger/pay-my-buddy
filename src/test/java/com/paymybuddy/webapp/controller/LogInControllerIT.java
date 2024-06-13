@@ -21,7 +21,7 @@ public class LogInControllerIT {
     @Test
     public void userLoginTest() throws Exception {
         mockMvc.perform(formLogin("/login").user("john_doe@mail.com")
-                .password("password")).andExpect(authenticated());
+                .password("1234@Abcd")).andExpect(authenticated());
     }
 
     @Test

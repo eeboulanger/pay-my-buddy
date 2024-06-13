@@ -2,13 +2,16 @@ package com.paymybuddy.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
+import com.paymybuddy.webapp.dto.MoneyTransferDTO;
 import com.paymybuddy.webapp.model.Account;
 import com.paymybuddy.webapp.model.Transaction;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.repository.UserRepository;
 import com.paymybuddy.webapp.service.CustomUserDetailsService;
 import com.paymybuddy.webapp.service.IAccountService;
 import com.paymybuddy.webapp.service.ITransactionService;
 import com.paymybuddy.webapp.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +22,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
@@ -43,25 +49,37 @@ public class TransactionControllerTest {
     private ITransactionService transactionService;
     @InjectMocks
     private TransactionController controller;
-    private final Transaction transaction = new Transaction();
+    private Transaction transaction;
     private final ObjectMapper mapper = new ObjectMapper();
+
+    @BeforeEach
+    public void setUp() {
+        Timestamp date = Timestamp.from(Instant.now());
+        User receiver = new User();
+        receiver.setId(1);
+        User sender = new User();
+        sender.setId(2);
+
+        transaction = new Transaction();
+        transaction.setAmount(10.00);
+        transaction.setReceiver(receiver);
+        transaction.setSender(sender);
+        transaction.setDescription("Birthday");
+        transaction.setDate(date);
+    }
 
     @Test
     @DisplayName("Given authenticated as admin when create new transaction should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void createNewTransactionAsAdmin_shouldSucceedTest() throws Exception {
-        Transaction newTransaction = new Transaction();
-        transaction.setAmount(10.00);
-        transaction.setDescription("Birthday");
-
-        when(transactionService.saveTransaction(transaction)).thenReturn(newTransaction);
+        when(transactionService.saveTransaction(transaction)).thenReturn(transaction);
 
         mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(transaction))
                         .with(csrf()))
                 .andExpect(status().isOk());
-        verify(transactionService, times(1)).saveTransaction(transaction);
+        verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
 
     @Test

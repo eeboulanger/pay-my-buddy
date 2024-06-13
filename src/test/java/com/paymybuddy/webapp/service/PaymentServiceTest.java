@@ -17,9 +17,11 @@ import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -137,5 +139,19 @@ public class PaymentServiceTest {
         verify(userService, times(1)).getUserByEmail(authentication.getName());
         verify(userService, times(1)).getUserById(2);
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
+    }
+
+    @Test
+    @DisplayName("Given the user has a list of connections then get user connections should return the list")
+    public void getUserConnectionsTest() {
+        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
+        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+
+        Set<User> result = paymentService.getUserConnections();
+
+        verify(authenticationFacade).getAuthentication();
+        verify(userService).getUserByEmail(authentication.getName());
+        assertNotNull(result);
+        assertTrue(result.contains(receiver));
     }
 }

@@ -10,6 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class UserConnectionService implements IUserConnectionService {
     private final Logger logger = LoggerFactory.getLogger(UserConnectionService.class);
@@ -31,14 +35,17 @@ public class UserConnectionService implements IUserConnectionService {
             return new UserNotFoundException("No user found with email: " + email);
         });
 
-        //Get authenticated user id
-        Authentication authUser = authenticationFacade.getAuthentication();
-        User user = userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
-            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
-        });
+        User user = getAuthenticatedUser();
 
         user.getConnections().add(userConnection);
         userService.saveUser(user);
+    }
+
+    private User getAuthenticatedUser(){
+        Authentication authUser = authenticationFacade.getAuthentication();
+        return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
+            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
+            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
+        });
     }
 }

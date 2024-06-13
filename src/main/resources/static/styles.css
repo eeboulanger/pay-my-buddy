@@ -1,6 +1,11 @@
-#loginContainer {
+.connexionContainer {
     width: 31rem;
     height: 43rem;
+}
+
+.contentContainer{
+    width:40rem;
+    margin-top:10rem;
 }
 
 #buttonLogo {
@@ -34,25 +39,11 @@
     font-weight: bold;
 }
 
-#formButton{
-    margin-top:100px;
-    width:214px;
-    height:64px;
-    font-size: 24px;
-    font-weight: bold;
-    background-color:#207FEE;
-    color:white;
-    border: none;
-    border-radius:10px;
-}
-
-
 .container {
     display: grid;
     place-items: center;
     height: 100%;
 }
-
 
 
 .visually-hidden {
@@ -67,22 +58,27 @@
 }
 
 
-#profileContainer{
-    width:40rem;
-    margin-top:10rem;
-}
 
 .navbar-nav .nav-item.active .nav-link {
     color: blue;
 }
-#profileButton{
-    margin-top:100px;
-    width:147px;
-    height:64px;
-    font-size: 24px;
+
+.btn-yellow{
+    width:100px;
+    height:50px;
+    font-size: 20px;
     font-weight: bold;
     background-color:#F69F1D;
     color:white;
     border: none;
     border-radius:10px;
+}
+
+.center{
+    margin:auto;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }

@@ -34,7 +34,7 @@ public class UserConnectionControllerTest {
                         .with(csrf())
                         .param("email", email))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/index"));
+                .andExpect(redirectedUrl("/connections"));
         verify(service, times(1)).addUserConnection(email);
 
     }
@@ -48,7 +48,7 @@ public class UserConnectionControllerTest {
                         .with(csrf())
                         .param("email",email))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/connections"));
 
         verify(service, times(1)).addUserConnection(email);
     }

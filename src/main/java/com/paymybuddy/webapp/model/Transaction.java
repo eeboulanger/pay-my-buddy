@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Transaction {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "transaction_date", nullable = false)
     private Timestamp date;
 
     @ManyToOne(fetch = FetchType.LAZY)

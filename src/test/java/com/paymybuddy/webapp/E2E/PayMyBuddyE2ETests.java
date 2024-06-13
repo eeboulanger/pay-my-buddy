@@ -33,7 +33,7 @@ public class PayMyBuddyE2ETests {
                         .with(csrf())
                         .param("email", "jane_doe@mail.com")) //User exists in test database
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/index"));
+                .andExpect(redirectedUrl("/connections"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class PayMyBuddyE2ETests {
                         .with(csrf())
                         .param("email", "no_user@mail.com")) //User doesn't exist in test database
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/connections"));
     }
 
     @Test
@@ -57,12 +57,12 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/payment")
+        mockMvc.perform(post("/payments")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/index"));
+                .andExpect(redirectedUrl("/payments"));
     }
 
     @Test
@@ -75,12 +75,12 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/payment")
+        mockMvc.perform(post("/payments")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/payments"));
     }
 
     @Test
@@ -93,12 +93,12 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/payment")
+        mockMvc.perform(post("/payments")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/payments"));
     }
 
     @Test
@@ -111,11 +111,11 @@ public class PayMyBuddyE2ETests {
         dto.setDescription("Birthday");
 
         ObjectMapper mapper = new ObjectMapper();
-        mockMvc.perform(post("/payment")
+        mockMvc.perform(post("/payments")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/payments"));
     }
 }

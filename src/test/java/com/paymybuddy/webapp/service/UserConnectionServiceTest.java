@@ -13,12 +13,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserConnectionTest {
+public class UserConnectionServiceTest {
     @Mock
     private UserService userService;
     @Mock
@@ -28,13 +29,18 @@ public class UserConnectionTest {
     @Mock
     private Authentication auth;
     private User user;
+    private User connection;
     private String email;
 
     @BeforeEach
     public void setUp() {
+        connection = new User();
+        connection.setUsername("Jane");
         user = new User();
         email = "jane_doe@mail.com";
         user.setEmail(email);
+
+        user.setConnections(Set.of(connection));
     }
 
     @Test
