@@ -26,6 +26,7 @@ public class UserConnectionController {
     public String addUserConnection(@RequestParam String email, RedirectAttributes attributes) {
         try {
             service.addUserConnection(email);
+            attributes.addFlashAttribute("success", true);
             return "redirect:/connections";
         } catch (UserNotFoundException e) {
             attributes.addFlashAttribute("error", e.getMessage());

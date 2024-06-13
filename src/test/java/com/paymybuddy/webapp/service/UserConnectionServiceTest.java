@@ -57,6 +57,7 @@ public class UserConnectionServiceTest {
         verify(userService).getUserByEmail(email);
         verify(authenticationFacade, times(1)).getAuthentication();
         verify(userService).getUserByEmail(auth.getName());
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 
     @Test

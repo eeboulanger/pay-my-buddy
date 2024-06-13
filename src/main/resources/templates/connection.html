@@ -42,23 +42,29 @@
     <div class="container-fluid d-flex justify-content-center align-items-center flex-column">
         <!--Email search form-->
         <div class="contentContainer">
-        <form th:action="@{/connections}" method="post" role="form">
-            <div class="row">
-                <div class="col">
-                    <label for="email">Chercher une relation</label>
-                    <div>
-                        <input id="email" type="text" class="form-control" placeholder="Saisir une adresse mail"
-                               />
+            <form th:action="@{/connections}" method="post" role="form">
+                <div class="row">
+                    <div class="col">
+                        <label for="email">Chercher une relation</label>
+                        <div>
+                            <input id="email" type="text" name="email" class="form-control"
+                                   placeholder="Saisir une adresse mail"
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn-yellow">Ajouter</button>
                     </div>
                 </div>
-                <div class="col">
-                    <button type="button" class="btn-yellow">Ajouter</button>
+                <div class="mt-5">
+                    <div th:if="${success}" class="alert alert-success">
+                        <p>La relation a été ajoutée avec succès !</p>
+                    </div>
+                    <!-- Show global errors-->
+                    <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
                 </div>
-            </div>
-        </form>
-        <!-- Show global errors-->
-        <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
-    </div>
+            </form>
+        </div>
     </div>
 </main>
 </body>
