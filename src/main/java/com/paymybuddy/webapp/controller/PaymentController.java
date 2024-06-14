@@ -16,23 +16,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class PaymentController {
 
-    private Logger logger = LoggerFactory.getLogger(PaymentController.class);
+    private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
     @Autowired
     private IPaymentService paymentService;
 
     @GetMapping("/payments")
     public String getMoneyTransactions(Model model) {
-        Set<User> connections = paymentService.getUserConnections();
-        List<Transaction> transactions = paymentService.getUserTransactions();
+        Set<User> connections = paymentService.getUserConnections().orElse(Collections.emptySet());
+        List<Transaction> transactions = paymentService.getUserTransactions().orElse(Collections.emptyList());
 
         model.addAttribute("transactions", transactions);
         model.addAttribute("connections", connections);

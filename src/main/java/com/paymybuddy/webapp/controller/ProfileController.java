@@ -36,6 +36,7 @@ public class ProfileController {
 
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             String clientName = oauthToken.getAuthorizedClientRegistrationId();
+            logger.info("oauth connection email: "+ ((OAuth2User) authentication.getPrincipal()).getName());
             model.addAttribute("clientName", clientName.equals("google") ? "Google" : "GitHub");
         }
         return "oauth_profile";

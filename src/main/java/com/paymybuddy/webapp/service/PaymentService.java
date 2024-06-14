@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -108,17 +109,19 @@ public class PaymentService implements IPaymentService {
      *
      * @return a list of transactions from and to the user order by date
      */
-    public List<Transaction> getUserTransactions() {
+    public Optional<List<Transaction>> getUserTransactions() {
         User user = getCurrentUser();
         List<Transaction> transactions = transactionService.getUserTransactions(user.getId());
-        transactions.stream().filter(transaction ->
-                        transaction.getReceiver().getEmail().equals(user.getEmail()))
-                .forEach(transaction -> transaction.getReceiver().setUsername("Me"));
-        return transactions;
+        if (transactions != null) {
+            transactions.stream().filter(transaction ->
+                            transaction.getReceiver().getEmail().equals(user.getEmail()))
+                    .forEach(transaction -> transaction.getReceiver().setUsername("Me"));
+        }
+        return Optional.ofNullable(transactions);
     }
 
-    public Set<User> getUserConnections() {
+    public Optional<Set<User>> getUserConnections() {
         User user = getCurrentUser();
-        return user.getConnections();
+        return Optional.ofNullable(user.getConnections());
     }
 }

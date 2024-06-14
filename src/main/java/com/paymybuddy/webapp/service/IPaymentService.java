@@ -7,6 +7,7 @@ import com.paymybuddy.webapp.model.Transaction;
 import com.paymybuddy.webapp.model.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,7 +17,7 @@ public interface IPaymentService {
 
     void transferMoney(MoneyTransferDTO dto) throws PaymentException, UserNotFoundException;
 
-    List<Transaction> getUserTransactions();
+    Optional<List<Transaction>> getUserTransactions();
 
-    Set<User> getUserConnections();
+    Optional<Set<User>> getUserConnections();
 }

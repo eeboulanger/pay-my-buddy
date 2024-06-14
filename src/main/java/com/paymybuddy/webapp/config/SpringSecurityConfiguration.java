@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.config;
 
+import com.paymybuddy.webapp.service.CustomOAuth2Service;
 import com.paymybuddy.webapp.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import java.util.*;
 public class SpringSecurityConfiguration {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private CustomOAuth2Service customOAuth2Service;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,7 +37,8 @@ public class SpringSecurityConfiguration {
                         .loginPage("/login")
                         .defaultSuccessUrl("/oauth_profile", true)
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userAuthoritiesMapper(this.userAuthoritiesMapper("USER"))) //Add user role
+                                .userAuthoritiesMapper(this.userAuthoritiesMapper("USER")) //Add user role
+                        .userService(customOAuth2Service))
                         .permitAll())
                 .formLogin(form -> form
                         .loginPage("/login")

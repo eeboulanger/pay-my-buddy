@@ -15,11 +15,11 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
@@ -117,7 +117,7 @@ public class PaymentControllerTest {
         @WithMockUser(roles = "USER")
         @DisplayName("Given the user has connections, then add connections to model")
         public void getUserConnectionsTest() throws Exception {
-            when(paymentService.getUserConnections()).thenReturn(connections);
+            when(paymentService.getUserConnections()).thenReturn(Optional.of(connections));
 
             mockMvc.perform(get("/payments")
                             .with(csrf()))
@@ -152,7 +152,7 @@ public class PaymentControllerTest {
         @WithMockUser(roles = "USER")
         @DisplayName("Given the user has done previous transactions, when add transactions to model")
         public void getMoneyTransactionsTest() throws Exception {
-            when(paymentService.getUserTransactions()).thenReturn(transactions);
+            when(paymentService.getUserTransactions()).thenReturn(Optional.of(transactions));
 
             mockMvc.perform(get("/payments")
                             .with(csrf()))

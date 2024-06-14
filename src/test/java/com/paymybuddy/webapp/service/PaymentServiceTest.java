@@ -17,9 +17,7 @@ import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -147,11 +145,49 @@ public class PaymentServiceTest {
         when(authenticationFacade.getAuthentication()).thenReturn(authentication);
         when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
 
-        Set<User> result = paymentService.getUserConnections();
+        Set<User> result = paymentService.getUserConnections().orElse(Collections.emptySet());
 
         verify(authenticationFacade).getAuthentication();
         verify(userService).getUserByEmail(authentication.getName());
         assertNotNull(result);
         assertTrue(result.contains(receiver));
+    }
+
+    @Test
+    @DisplayName("Given there are no transactions for the user then return empty list")
+    public void getUserTransactions_whenNoTransactionsTest() {
+        List<Transaction> transactions = null;
+
+        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
+        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
+
+        Optional<List<Transaction>> result = paymentService.getUserTransactions();
+
+        verify(authenticationFacade).getAuthentication();
+        verify(userService).getUserByEmail(authentication.getName());
+        verify(transactionService, times(1)).getUserTransactions(user.getId());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Given there are transactions for the user then return list")
+    public void getUserTransactionsTest() {
+        Transaction transaction = new Transaction();
+        transaction.setReceiver(user);
+        transaction.setSender(user);
+        List<Transaction> transactions = List.of(transaction);
+
+        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
+        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
+
+        Optional<List<Transaction>> result = paymentService.getUserTransactions();
+
+        verify(authenticationFacade).getAuthentication();
+        verify(userService).getUserByEmail(authentication.getName());
+        verify(transactionService, times(1)).getUserTransactions(user.getId());
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().size());
     }
 }

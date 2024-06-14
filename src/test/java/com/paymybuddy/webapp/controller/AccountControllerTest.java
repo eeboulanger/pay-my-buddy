@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.model.Account;
 import com.paymybuddy.webapp.repository.UserRepository;
+import com.paymybuddy.webapp.service.CustomOAuth2Service;
 import com.paymybuddy.webapp.service.CustomUserDetailsService;
 import com.paymybuddy.webapp.service.IAccountService;
 import com.paymybuddy.webapp.service.UserService;
@@ -33,6 +34,8 @@ public class AccountControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private CustomUserDetailsService userDetailsService;
+    @MockBean
+    private CustomOAuth2Service oAuth2Service;
     @MockBean
     private UserService userService;
     @MockBean

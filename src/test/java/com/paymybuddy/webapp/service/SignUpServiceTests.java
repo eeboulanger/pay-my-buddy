@@ -19,27 +19,32 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class SignUpServiceTests {
     @Mock
-    private UserService userService;
+    private IUserService userService;
+    @Mock
+    private IAccountService accountService;
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks
     private SignUpService service;
 
     @Test
-    @DisplayName("Given there is no client with the given email address, when sign up new client, then return true")
+    @DisplayName("Given there is no user with the given email address, when sign up new user, then create new user")
     public void givenEmailDoesNotExist_whenSignUp_thenCreateNewClient() throws RegistrationException {
-        UserDTO client = new UserDTO();
-        client.setEmail("john_doe@mail.com");
-        client.setPassword("password");
-        when(userService.getUserByEmail(client.getEmail())).thenReturn(Optional.empty());
+        User user=new User();
+        UserDTO dto = new UserDTO();
+        dto.setEmail("john_doe@mail.com");
+        dto.setPassword("password");
+        when(userService.getUserByEmail(dto.getEmail())).thenReturn(Optional.empty());
+        when(userService.saveUser(any(User.class))).thenReturn(user);
 
-        service.signUp(client);
+        service.signUp(dto);
 
-        verify(userService, times(1)).getUserByEmail(client.getEmail());
+        verify(userService, times(1)).getUserByEmail(dto.getEmail());
+        verify(userService, times(2)).saveUser(any(User.class));
     }
 
     @Test
-    @DisplayName("Given there is a client with the given email address, when sign up new client, then throw email not unique exception")
+    @DisplayName("Given there is a user with the given email address, when sign up new user, then throw email not unique exception")
     public void givenEmailExistsInDb_whenSignUp_thenDoNotCreateNewClient() {
         UserDTO form = new UserDTO();
         form.setEmail("john_doe@mail.com");
@@ -50,5 +55,6 @@ public class SignUpServiceTests {
         assertThrows(RegistrationException.class, () -> service.signUp(form));
 
         verify(userService, times(1)).getUserByEmail(form.getEmail());
+        verify(userService, never()).saveUser(any(User.class));
     }
 }

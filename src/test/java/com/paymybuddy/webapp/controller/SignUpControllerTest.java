@@ -26,6 +26,8 @@ public class SignUpControllerTest {
     @MockBean
     private CustomUserDetailsService userDetailsService;
     @MockBean
+    private CustomOAuth2Service oAuth2Service;
+    @MockBean
     private IUserService userService;
     @MockBean
     private UserRepository userRepository;

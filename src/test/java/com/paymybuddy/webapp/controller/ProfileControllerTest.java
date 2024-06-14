@@ -3,6 +3,7 @@ package com.paymybuddy.webapp.controller;
 import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.repository.UserRepository;
+import com.paymybuddy.webapp.service.CustomOAuth2Service;
 import com.paymybuddy.webapp.service.CustomUserDetailsService;
 import com.paymybuddy.webapp.service.IUserProfileService;
 import com.paymybuddy.webapp.service.IUserService;
@@ -27,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProfileControllerTest {
     @MockBean
     private CustomUserDetailsService userDetailsService;
+    @MockBean
+    private CustomOAuth2Service oAuth2Service;
     @MockBean
     private IUserService userService;
     @MockBean
