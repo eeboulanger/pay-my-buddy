@@ -24,7 +24,10 @@ public class ProfileController {
     private IUserProfileService profileService;
 
     @GetMapping("/profile")
-    public String getProfile(Model model) {
+    public String getProfile(Model model, Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+            return "oauth_profile";
+        }
         UserDTO user = profileService.getCurrentUser();
         model.addAttribute("userDTO", user);
         return "profile";
@@ -32,13 +35,11 @@ public class ProfileController {
 
     @GetMapping("/oauth_profile")
     public String getOauthProfile(Model model, Authentication authentication) {
-        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+        String clientName = oauthToken.getAuthorizedClientRegistrationId();
+        logger.info("oauth connection email: " + ((OAuth2User) authentication.getPrincipal()).getName());
+        model.addAttribute("clientName", clientName.equals("google") ? "Google" : "GitHub");
 
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-            String clientName = oauthToken.getAuthorizedClientRegistrationId();
-            logger.info("oauth connection email: "+ ((OAuth2User) authentication.getPrincipal()).getName());
-            model.addAttribute("clientName", clientName.equals("google") ? "Google" : "GitHub");
-        }
         return "oauth_profile";
     }
 

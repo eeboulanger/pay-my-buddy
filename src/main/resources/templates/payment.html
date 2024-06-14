@@ -102,9 +102,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:if="${transactions.empty}">
-                        <td>Pas de relations disponibles</td>
-                    </tr>
                     <tr th:each="transaction : ${transactions}">
                         <td>
                             <span th:if="${transaction.receiver.username == 'Me'}">Virement à votre faveur</span>
@@ -112,7 +109,7 @@
                                   th:text="${transaction.receiver.username}">Receiver</span>
                         </td>
                         <td><span th:text="${transaction.description}">Description</span></td>
-                        <td><span th:text="${transaction.amount}">Amount</span></td>
+                        <td><span th:text="${transaction.amount} + €">Amount</span></td>
                     </tr>
                     </tbody>
                 </table>
