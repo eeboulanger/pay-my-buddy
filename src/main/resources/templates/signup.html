@@ -10,42 +10,42 @@
     <title>Page d'inscription</title>
 </head>
 <body>
-<main>
+<main role="main">
     <div class="container-fluid d-flex align-items-center justify-content-center">
         <div class="connexionContainer p-5 my-5 border d-flex flex-column align-items-center justify-content-center">
 
             <button id="buttonLogo" class="mb-3">Pay my buddy</button>
 
             <form th:action="@{/signup}" th:object="${userDTO}" method="post" role="form">
-                <div class="row">
-                    <div>
+                <div class="row" role="group" aria-labelledby="coordonnees">
+                    <div id="coordonnees">
                         <div class="mb-2">
-                            <label for="username" class="col-form-label"></label>
+                            <label for="username" class="col-form-label visually-hidden">Votre nom d'utilisateur</label>
                             <input type="text" th:field="*{username}" class="form-control formField"
                                    id="username"
                                    name="username"
-                                   placeholder="Username"/>
+                                   placeholder="Username" aria-required="true" required/>
                             <p th:if="${#fields.hasErrors('username')}" th:errorclass="text-danger"
-                               th:errors="*{username}">
+                               th:errors="*{username}" aria-invalid="true">
                                 Username error</p>
                         </div>
 
                         <div class="mb-2">
-                            <label for="email" class="col-form-label"></label>
+                            <label for="email" class="col-form-label visually-hidden">Votre email</label>
                             <input type="text" th:field="*{email}" class="form-control formField"
-                                   id="email" name="username" placeholder="Mail"/>
-                            <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger" th:errors="*{email}">
+                                   id="email" name="username" placeholder="Mail" aria-required="true" required/>
+                            <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger" th:errors="*{email}" aria-invalid="true">
                                 Email
                                 error</p>
                         </div>
 
                         <div>
-                            <label for="password" class="col-form-label"></label>
+                            <label for="password" class="col-form-label visually-hidden">Votre mot de passe</label>
                             <input type="password" th:field="*{password}" class="form-control formField" id="password"
                                    name="password"
-                                   placeholder="Mot de passe" required/>
+                                   placeholder="Mot de passe" aria-required="true" required/>
                             <p th:if="${#fields.hasErrors('password')}" th:errorclass="text-danger"
-                               th:errors="*{password}">
+                               th:errors="*{password}" aria-invalid="true">
                                 Password error</p>
                         </div>
                     </div>
@@ -56,13 +56,13 @@
                 </div>
             </form>
             <div>
-                <a th:href="@{/oauth2/authorization/google}">Sign up with Google</a>
+                <a th:href="@{/oauth2/authorization/google}" aria-label="S'inscrire avec GitHub">S'inscrire avec Google</a>
             </div>
             <div>
-                <a th:href="@{/oauth2/authorization/github}">Sign up with GitHub</a>
+                <a th:href="@{/oauth2/authorization/github}" aria-label="S'inscrire avec GitHub">S'inscrire avec GitHub</a>
             </div>
             <!-- Show global errors-->
-            <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+            <div th:if="${error}" th:text="${error}" class="alert alert-danger" aria-live="polite"></div>
         </div>
     </div>
 </main>

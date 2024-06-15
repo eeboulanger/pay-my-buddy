@@ -12,16 +12,16 @@
 
 </head>
 <body>
-<header>
+<header role="banner">
     <!--Navigation bar-->
-    <nav class="navbar navbar-expand-sm bg-white">
+    <nav class="navbar navbar-expand-sm bg-white" role="navigation">
         <div class="container-fluid">
 
             <a class="navbar-brand m-4" href="#"> Pay my buddy</a>
 
             <ul class="navbar-nav">
                 <li class="nav-item me-4 active">
-                    <a class="nav-link" th:href="@{/payments}">Transférer</a>
+                    <a class="nav-link" aria-current="page" th:href="@{/payments}">Transférer</a>
                 </li>
                 <li class="nav-item me-4">
                     <a class="nav-link" th:href="@{/profile}">Profil</a>
@@ -39,18 +39,21 @@
     </nav>
 </header>
 
-<main>
+<main role="main">
 
     <div class="container-fluid">
         <!--Transfer money-->
-        <section>
+        <section aria-labelledby="transfer-section">
+            <h2 id="transfer-section" class="visually-hidden">Transférer de l'argent</h2>
 
             <form th:action="@{/payments}" th:object="${moneyTransfer}" method="post" role="form">
-                <div class="container-fluid m-5">
-                    <div class="row">
+                <div class="container-fluid m-5" role="group" aria-labelledby="money-transfer-details">
+                    <div class="row" id="money-transfer-details">
                         <div class="col">
-                            <label for="dropDownList" class="form-label"></label>
-                            <select class="form-control" id="dropDownList" th:field="*{receiverId}">
+                            <label for="dropDownList" class="form-label visually-hidden">Sélectionner une
+                                relation</label>
+                            <select class="form-control" id="dropDownList" th:field="*{receiverId}" aria-required="true"
+                                    required>
                                 <option value="0">Sélectionner une relation</option>
                                 <option th:each="connection : ${connections}" th:value="${connection.id}"
                                         th:text="${connection.username}"></option>
@@ -58,19 +61,20 @@
                         </div>
 
                         <div class="col">
-                            <label for="description" class="form-label"></label>
+                            <label for="description" class="form-label visually-hidden">Description</label>
                             <input id="description" class="form-control" type="text" th:field="*{description}"
-                                   value="@description" placeholder="Description"/>
+                                   value="@description" placeholder="Description" aria-required="true" required/>
                             <p th:if="${#fields.hasErrors('description')}" th:errorclass="text-danger"
-                               th:errors="*{description}">
+                               th:errors="*{description}" aria-invalid="true">
                                 Description error</p>
                         </div>
 
                         <div class="col">
-                            <label for="amount" class="form-label"></label>
+                            <label for="amount" class="form-label visually-hidden">Montant</label>
                             <input id="amount" class="form-control" type="number" th:field="*{amount}" value="@amount"
-                                   placeholder="0€"/>
-                            <p th:if="${#fields.hasErrors('amount')}" th:errorclass="text-danger" th:errors="*{amount}">
+                                   placeholder="0€" aria-required="true" required/>
+                            <p th:if="${#fields.hasErrors('amount')}" th:errorclass="text-danger" th:errors="*{amount}"
+                               aria-invalid="true">
                                 Amount error</p>
                         </div>
                         <div class="col mt-4">
@@ -91,14 +95,16 @@
         </section>
 
         <!-- My transactions -->
-        <section>
+        <section aria-labelledby="transactions-section">
+            <h2 class="visually-hidden" id= "transactions-section">Transactions</h2>
             <div class="container mt-5">
                 <table class="table table-bordered">
+                    <caption class="visually-hidden">Transactions de l'utilisateur</caption>
                     <thead>
                     <tr>
-                        <th>Relations</th>
-                        <th>Description</th>
-                        <th>Montant</th>
+                        <th scope="col">Relations</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Montant</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -9,11 +9,11 @@
 }
 
 #buttonLogo {
-    width: 214px;
-    height: 64px;
+    width: 13rem;
+    height: 4rem;
     background-color: #F69F1D;
     color: white;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -33,9 +33,9 @@
 }
 
 #formFields{
-    height:40px;;
-    width:295px;
-    font-size: 24px;
+    height:2.5rem;;
+    width:18.5rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -64,9 +64,9 @@
 }
 
 .btn-yellow{
-    width:100px;
-    height:50px;
-    font-size: 20px;
+    width:6rem;
+    height:3rem;
+    font-size: 1.2rem;
     font-weight: bold;
     background-color:#F69F1D;
     color:white;

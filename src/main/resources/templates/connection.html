@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="fr">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -11,9 +10,9 @@
 
     <title>Page d'ajout de relation</title>
 </head>
-<header>
+<header role="banner">
     <!--Navigation bar-->
-    <nav class="navbar navbar-expand-sm bg-white">
+    <nav class="navbar navbar-expand-sm bg-white" role="navigation">
         <div class="container-fluid">
 
             <a class="navbar-brand m-4" href="#"> Pay my buddy</a>
@@ -26,7 +25,7 @@
                     <a class="nav-link" th:href="@{/profile}">Profil</a>
                 </li>
                 <li class="nav-item me-4 active">
-                    <a class="nav-link" th:href="@{/connections}">Ajouter relation</a>
+                    <a class="nav-link" aria-current="page" th:href="@{/connections}">Ajouter relation</a>
                 </li>
                 <li class="nav-item me-5">
                     <form th:action="@{/logout}" method="post">
@@ -38,7 +37,7 @@
     </nav>
 </header>
 <body>
-<main>
+<main role="main">
     <div class="container-fluid d-flex justify-content-center align-items-center flex-column">
         <!--Email search form-->
         <div class="contentContainer">
@@ -57,11 +56,11 @@
                     </div>
                 </div>
                 <div class="mt-5">
-                    <div th:if="${success}" class="alert alert-success">
+                    <div th:if="${success}" class="alert alert-success" aria-live="polite">
                         <p>La relation a été ajoutée avec succès !</p>
                     </div>
                     <!-- Show global errors-->
-                    <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+                    <div th:if="${error}" th:text="${error}" class="alert alert-danger" aria-live="polite"></div>
                 </div>
             </form>
         </div>
