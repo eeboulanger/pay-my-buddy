@@ -68,7 +68,7 @@ public class UserProfileService implements IUserProfileService {
         logger.debug("Get current authenticated user: " + authUser.getName());
         return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
+            return new UsernameNotFoundException("Utilisateur authentifié non trouvé"); //Force new login
         });
     }
 }

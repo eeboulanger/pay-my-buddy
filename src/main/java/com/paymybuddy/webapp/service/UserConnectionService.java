@@ -10,10 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 @Service
 public class UserConnectionService implements IUserConnectionService {
     private final Logger logger = LoggerFactory.getLogger(UserConnectionService.class);
@@ -24,28 +20,35 @@ public class UserConnectionService implements IUserConnectionService {
 
     /**
      * Adds a user connection to the authenticated user if the user connection exists in database
+     *
      * @param email is the email of the user connection to be added
      */
     @Override
     @Transactional
     public void addUserConnection(String email) throws UserNotFoundException {
+        //Check if the user is the same as auth user
+
         //Check if user exists in database
         User userConnection = userService.getUserByEmail(email).orElseThrow(() -> {
             logger.error("Failed to create new user connection. No user with email: " + email + " was found.");
-            return new UserNotFoundException("No user found with email: " + email);
+            return new UserNotFoundException("Aucun utilisateur trouvé avec email: " + email);
         });
 
         User user = getAuthenticatedUser();
+        if (email.equals(user.getEmail())) {
+            logger.error("Failed to create new user connection. The email: " + email + " is identical to the current users email");
+            throw new UserNotFoundException("Aucun utilisateur trouvé avec email: " + email);
+        }
 
         user.getConnections().add(userConnection);
         userService.saveUser(user);
     }
 
-    private User getAuthenticatedUser(){
+    private User getAuthenticatedUser() {
         Authentication authUser = authenticationFacade.getAuthentication();
         return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force new login
+            return new UsernameNotFoundException("L'utilisateur authentifié n'a pas été trouvé"); //Force new login
         });
     }
 }

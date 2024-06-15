@@ -43,7 +43,7 @@ public class PaymentService implements IPaymentService {
 
         User receiver = userService.getUserById(moneyTransferDTO.getReceiverId()).orElseThrow(() -> {
             logger.error("Failed to find receiver: No user with id " + moneyTransferDTO.getReceiverId() + " was found.");
-            return new PaymentException("Receiver not found");
+                return new PaymentException("Le bénéficiaire n'a pas été trouvé");
         });
 
         validateTransferDetails(user, receiver, moneyTransferDTO.getAmount());
@@ -55,7 +55,7 @@ public class PaymentService implements IPaymentService {
         Authentication authUser = authenticationFacade.getAuthentication();
         return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
             logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("Authenticated user not found."); //Force login if not found
+            return new UsernameNotFoundException("L'utilisateur authentifié n'a pas été trouvé"); //Force login if not found
         });
     }
 
@@ -70,12 +70,12 @@ public class PaymentService implements IPaymentService {
         if (user.getAccount().getBalance() < amount) {
             logger.error("Failed to transfer money. The amount is higher than the current available balance." +
                     "Amount: " + amount + " balance: " + user.getAccount().getBalance());
-            throw new PaymentException("Funds are insufficient");
+            throw new PaymentException("Les fonds sont insuffisants");
         }
         //Check that receiver is one of the users connections
         if (!user.getConnections().contains(receiver)) {
             logger.error("Failed to transfer money. The receiver must be added as a user connection first.");
-            throw new PaymentException("User has to be added as connection.");
+            throw new PaymentException("La relation a été ajoutée");
         }
     }
 
@@ -100,7 +100,7 @@ public class PaymentService implements IPaymentService {
         } catch (DataAccessException e) {
             logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
                     user.getId(), receiver.getId(), amount, e.getMessage(), e);
-            throw new PaymentException("Failed to transfer money: " + e.getMessage());
+            throw new PaymentException("Échec du transfert d'argent: " + e.getMessage());
         }
     }
 

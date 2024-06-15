@@ -22,14 +22,19 @@ import java.util.*;
  */
 @Service
 public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-
     private final Logger logger = LoggerFactory.getLogger(CustomOAuth2Service.class);
+    private final IUserService userService;
+    private final DefaultOAuth2UserService delegate;
+
     @Autowired
-    private IUserService userService;
-    private final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+    public CustomOAuth2Service(IUserService userService, DefaultOAuth2UserService delegate) {
+        this.userService = userService;
+        this.delegate = delegate;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         //Get email and username

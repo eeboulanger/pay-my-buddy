@@ -61,6 +61,24 @@ public class UserConnectionServiceTest {
     }
 
     @Test
+    @DisplayName("Given the email is the same as current user, when add user connection, then throw exception")
+    public void addNewUserConnection_whenSameEmail_shouldFail() throws UserNotFoundException {
+        User authUser = new User();
+        authUser.setEmail(email);
+
+        when(userService.getUserByEmail(email)).thenReturn(Optional.of(user));
+        when(authenticationFacade.getAuthentication()).thenReturn(auth);
+        when(userService.getUserByEmail(auth.getName())).thenReturn(Optional.of(authUser));
+
+        assertThrows(UserNotFoundException.class, () -> service.addUserConnection(email));
+
+        verify(userService).getUserByEmail(email);
+        verify(authenticationFacade, times(1)).getAuthentication();
+        verify(userService).getUserByEmail(auth.getName());
+        verify(userService, never()).saveUser(any(User.class));
+    }
+
+    @Test
     @DisplayName("No user in database with the given email should throw exception")
     public void givenThereIsNoUserWithEmail_whenAddNewUserConnection_thenThrowException() {
         when(userService.getUserByEmail(email)).thenReturn(Optional.empty());

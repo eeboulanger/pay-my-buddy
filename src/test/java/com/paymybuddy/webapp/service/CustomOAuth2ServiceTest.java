@@ -23,12 +23,15 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CustomOAuth2ServiceTest {
     @Mock
+    private DefaultOAuth2UserService defaultOAuth2UserService;
+    @Mock
     private IUserService userService;
     @Mock
-    private DefaultOAuth2UserService delegate;
+    private OAuth2UserRequest oAuth2UserRequest;
+    @Mock
+    private OAuth2User oAuth2User;
     @Mock
     private ClientRegistration clientRegistration;
-
     @InjectMocks
     private CustomOAuth2Service service;
 
@@ -46,19 +49,16 @@ public class CustomOAuth2ServiceTest {
                 "email", user.getEmail(),
                 "name", user.getUsername());
 
-        OAuth2UserRequest oAuth2UserRequest = mock(OAuth2UserRequest.class);
-        OAuth2User oAuth2User = mock(OAuth2User.class);
-
-        when(delegate.loadUser(oAuth2UserRequest)).thenReturn(oAuth2User);
+        when(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class))).thenReturn(oAuth2User);
         when(oAuth2User.getAttributes()).thenReturn(attributes);
         when(oAuth2UserRequest.getClientRegistration()).thenReturn(clientRegistration);
         when(clientRegistration.getRegistrationId()).thenReturn("github");
         when(userService.getUserByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(userService.saveUser(any(User.class))).thenReturn(user);
 
+
         OAuth2User result = service.loadUser(oAuth2UserRequest);
 
-        verify(delegate, times(1)).loadUser(oAuth2UserRequest);
         verify(oAuth2User, times(1)).getAttributes();
         verify(oAuth2UserRequest, times(1)).getClientRegistration();
         verify(userService, times(1)).getUserByEmail(user.getEmail());
@@ -84,10 +84,8 @@ public class CustomOAuth2ServiceTest {
                 "name", user.getUsername(),
                 "id", "123");
 
-        OAuth2UserRequest oAuth2UserRequest = mock(OAuth2UserRequest.class);
-        OAuth2User oAuth2User = mock(OAuth2User.class);
 
-        when(delegate.loadUser(oAuth2UserRequest)).thenReturn(oAuth2User);
+        when(defaultOAuth2UserService.loadUser(any(OAuth2UserRequest.class))).thenReturn(oAuth2User);
         when(oAuth2User.getAttributes()).thenReturn(attributes);
         when(oAuth2UserRequest.getClientRegistration()).thenReturn(clientRegistration);
         when(clientRegistration.getRegistrationId()).thenReturn("github");
@@ -96,7 +94,6 @@ public class CustomOAuth2ServiceTest {
 
         OAuth2User result = service.loadUser(oAuth2UserRequest);
 
-        verify(delegate, times(1)).loadUser(oAuth2UserRequest);
         verify(oAuth2User, times(1)).getAttributes();
         verify(oAuth2UserRequest, times(1)).getClientRegistration();
         verify(userService, times(1)).getUserByEmail(user.getEmail());

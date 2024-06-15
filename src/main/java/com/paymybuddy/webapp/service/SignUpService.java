@@ -29,7 +29,7 @@ public class SignUpService implements ISignUpService {
         // Check if the email already exists in the database
         if (service.getUserByEmail(form.getEmail()).isPresent()) {
             logger.error("Failed to create new user. Email already exists in database");
-            throw new RegistrationException("Email already exists in database");
+            throw new RegistrationException("Email déjà utilisé");
         }
         mapToUser(form);
     }
