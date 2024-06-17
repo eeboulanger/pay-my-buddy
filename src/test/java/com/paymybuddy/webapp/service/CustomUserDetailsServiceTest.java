@@ -30,6 +30,7 @@ public class CustomUserDetailsServiceTest {
         User user = new User();
         user.setEmail(email);
         user.setPassword("password");
+        user.setRole("USER");
         when(service.getUserByEmail(email)).thenReturn(Optional.of(user));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);

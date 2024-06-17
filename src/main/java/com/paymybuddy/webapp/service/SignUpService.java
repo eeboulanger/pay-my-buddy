@@ -43,6 +43,7 @@ public class SignUpService implements ISignUpService {
         user.setEmail(form.getEmail());
         user.setUsername(form.getUsername());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
+        user.setRole("USER");
         user = service.saveUser(user);
 
         Account account = new Account();

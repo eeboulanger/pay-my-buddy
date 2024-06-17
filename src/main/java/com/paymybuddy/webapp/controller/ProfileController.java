@@ -25,6 +25,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String getProfile(Model model, Authentication authentication) {
+        logger.info("authentified as: "+authentication.getAuthorities());
         if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
             return "oauth_profile";
         }

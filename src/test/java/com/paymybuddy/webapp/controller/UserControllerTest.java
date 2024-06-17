@@ -24,6 +24,7 @@ import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = UserController.class)
@@ -58,22 +59,24 @@ public class UserControllerTest {
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void createNewAccountAsAdmin_shouldSucceedTest() throws Exception {
 
-        when(userService.saveUser(user)).thenReturn(user);
+        when(userService.saveUser(any(User.class))).thenReturn(user);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))
                         .with(csrf()))
-                .andExpect(status().isOk());
-        verify(userService, times(1)).saveUser(user);
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.password").value(user.getPassword()));
+
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 
     @Test
     @DisplayName("Given authenticated as user when creating a new user should fail")
     @WithMockUser(username = "user", roles = "USER")
     public void createNewUser_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        when(userService.saveUser(user)).thenReturn(user);
-
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))
@@ -110,7 +113,7 @@ public class UserControllerTest {
     @DisplayName("Given authenticated as admin when update user should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void updateUserAsAdmin_shouldSucceedTest() throws Exception {
-        when(userService.saveUser(user)).thenReturn(user);
+        when(userService.saveUser(any(User.class))).thenReturn(user);
 
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -118,15 +121,13 @@ public class UserControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        verify(userService, times(1)).saveUser(user);
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 
     @Test
     @DisplayName("Given authenticated as user when update a user should fail")
     @WithMockUser(username = "user", roles = "USER")
     public void updateUser_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        when(userService.saveUser(user)).thenReturn(user);
-
         mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(user))

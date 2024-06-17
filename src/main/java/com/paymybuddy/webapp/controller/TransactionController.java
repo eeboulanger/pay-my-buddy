@@ -1,22 +1,42 @@
 package com.paymybuddy.webapp.controller;
 
 import com.paymybuddy.webapp.model.Transaction;
+import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.service.ITransactionService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class TransactionController {
 
+    private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
     @Autowired
     private ITransactionService transactionService;
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/transactions")
+    public Transaction getTransactions(){
+        Timestamp date = Timestamp.from(Instant.now());
+        User sender = new User();
+        sender.setId(1);
+        User receiver = new User();
+        receiver.setId(2);
+        return new Transaction(10,"gift", date, sender, receiver);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/transactions")
     public Transaction newTransaction(@Valid @RequestBody Transaction newTransaction) {
+        logger.info("Adding new transaction as admin");
         return transactionService.saveTransaction(newTransaction);
     }
 

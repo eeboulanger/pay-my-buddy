@@ -80,6 +80,7 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
         User user = new User();
         user.setEmail(email);
         user.setUsername(name);
+        user.setRole("USER");
         user = userService.saveUser(user);
 
         Account account = new Account();

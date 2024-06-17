@@ -1,8 +1,8 @@
-INSERT INTO users (username, email, password)
+INSERT INTO users (username, email, password, role)
 VALUES
-('John', 'john_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi'),
-('Jane', 'jane_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi'),
-('Jimmie', 'jimmie_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi');
+('John', 'john_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
+('Jane', 'jane_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
+('Jimmie', 'jimmie_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER');
 
 INSERT INTO accounts (balance, user_id)
 VALUES

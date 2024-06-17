@@ -35,6 +35,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "role")
+    private String role;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Account account;
 

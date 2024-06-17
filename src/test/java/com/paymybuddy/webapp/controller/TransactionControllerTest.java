@@ -26,6 +26,7 @@ import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = TransactionController.class)
@@ -39,7 +40,7 @@ public class TransactionControllerTest {
     @MockBean
     private CustomOAuth2Service oAuth2Service;
     @MockBean
-    private UserService userService;
+    private IUserService userService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -69,13 +70,20 @@ public class TransactionControllerTest {
     @DisplayName("Given authenticated as admin when create new transaction should succeed")
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void createNewTransactionAsAdmin_shouldSucceedTest() throws Exception {
-        when(transactionService.saveTransaction(transaction)).thenReturn(transaction);
+        when(transactionService.saveTransaction(any(Transaction.class))).thenReturn(transaction);
 
         mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(transaction))
                         .with(csrf()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amount").value("10.0"))
+                .andExpect(jsonPath("$.description").value("Birthday"))
+                .andExpect(jsonPath("$.sender.id").value("2"));
+
+        String result = controller.getTransactions().toString();
+        System.out.println(result);
+
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
 
@@ -83,19 +91,18 @@ public class TransactionControllerTest {
     @DisplayName("Given authenticated as user when creating a new transaction should fail")
     @WithMockUser(username = "user", roles = "USER")
     public void createNewTransaction_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        Transaction newTransaction = new Transaction();
         transaction.setAmount(10.00);
         transaction.setDescription("Birthday");
 
-        when(transactionService.saveTransaction(transaction)).thenReturn(newTransaction);
+        when(transactionService.saveTransaction(any(Transaction.class))).thenReturn(transaction);
 
         mockMvc.perform(post("/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(transaction))
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isForbidden());
 
-        verify(transactionService, never()).saveTransaction(transaction);
+        verify(transactionService, never()).saveTransaction(any(Transaction.class));
     }
 
     @Test
