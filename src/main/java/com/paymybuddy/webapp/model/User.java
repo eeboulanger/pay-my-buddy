@@ -43,7 +43,7 @@ public class User {
     private Account account;
 
     @ManyToMany(
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_connections",
             joinColumns = @JoinColumn(name = "user_id"),

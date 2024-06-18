@@ -83,9 +83,6 @@ public class TransactionControllerTest {
                 .andExpect(jsonPath("$.description").value("Birthday"))
                 .andExpect(jsonPath("$.sender.id").value("2"));
 
-        String result = controller.getTransactions().toString();
-        System.out.println(result);
-
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
 

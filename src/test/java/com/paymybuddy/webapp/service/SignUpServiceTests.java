@@ -9,8 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,5 +56,20 @@ public class SignUpServiceTests {
 
         verify(userService, times(1)).getUserByEmail(form.getEmail());
         verify(userService, never()).saveUser(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Given saving user fails, when sign up new user, then throw email not unique exception")
+    public void givenTransactionalFails_whenSignUp_thenDoNotCreateNewClient() {
+        UserDTO form = new UserDTO();
+        form.setEmail("john_doe@mail.com");
+        form.setPassword("password");
+        when(userService.getUserByEmail(form.getEmail())).thenReturn(Optional.empty());
+        when(userService.saveUser(any(User.class))).thenThrow(new RuntimeException());
+
+        assertThrows(RuntimeException.class, () -> service.signUp(form));
+
+        verify(userService, times(1)).getUserByEmail(form.getEmail());
+        verify(userService, times(1)).saveUser(any(User.class));
     }
 }

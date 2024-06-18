@@ -31,7 +31,7 @@ public class SignUpController {
     @PostMapping("/signup")
     public String createNewUser(@Valid @ModelAttribute UserDTO form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            logger.error("Result binding has errors");
+            logger.error("Result binding has errors" + bindingResult.getAllErrors());
             return "signup";
         } else {
             try {

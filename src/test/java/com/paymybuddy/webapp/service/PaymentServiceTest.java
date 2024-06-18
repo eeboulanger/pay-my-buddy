@@ -119,9 +119,9 @@ public class PaymentServiceTest {
     public void saveTransactionFails_whenTransferMoney_shouldThrowException() {
         when(authenticationService.getCurrentUser()).thenReturn(user);
         when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
-        doThrow(PermissionDeniedDataAccessException.class).when(transactionService).saveTransaction(any(Transaction.class));
+        doThrow(RuntimeException.class).when(transactionService).saveTransaction(any(Transaction.class));
 
-        assertThrows(PaymentException.class, () ->
+        assertThrows(RuntimeException.class, () ->
                 paymentService.transferMoney(dto));
 
         verify(authenticationService, times(1)).getCurrentUser();

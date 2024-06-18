@@ -72,7 +72,7 @@
                         <div class="col">
                             <label for="amount" class="form-label visually-hidden">Montant</label>
                             <input id="amount" class="form-control" type="number" th:field="*{amount}" value="@amount"
-                                   placeholder="0€" aria-required="true" required/>
+                                   aria-required="true" required/>
                             <p th:if="${#fields.hasErrors('amount')}" th:errorclass="text-danger" th:errors="*{amount}"
                                aria-invalid="true">
                                 Amount error</p>

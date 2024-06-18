@@ -23,7 +23,6 @@ public class UserConnectionService implements IUserConnectionService {
      * @param email is the email of the user connection to be added
      */
     @Override
-    @Transactional
     public void addUserConnection(String email) throws UserNotFoundException {
         //Check if user exists in database
         User userConnection = userService.getUserByEmail(email).orElseThrow(() -> {

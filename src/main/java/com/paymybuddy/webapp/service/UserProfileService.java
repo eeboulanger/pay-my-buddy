@@ -4,14 +4,11 @@ import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.exception.ProfileException;
 import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.security.IAuthenticationService;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserProfileService implements IUserProfileService {
@@ -26,16 +23,20 @@ public class UserProfileService implements IUserProfileService {
 
     /**
      * Checks if user details email, password and username have been updated and saves the details to database
+     *
      * @param updatedUser are the user details retrieved from the form
      */
     @Override
-    @Transactional
     public void updateUser(UserDTO updatedUser) throws ProfileException {
         User user = authenticationService.getCurrentUser();
 
         if (!updatedUser.getEmail().equals(user.getEmail())) {
+
+            boolean emailAvailable = userService.getUserByEmail(updatedUser.getEmail()).isEmpty();
+            if (!emailAvailable) {
+                throw new ProfileException("L'email est déjà utilisé");
+            }
             logger.info("Updating user email");
-            checkIfEmailExists(updatedUser.getEmail());
             user.setEmail(updatedUser.getEmail());
         }
         if (!passwordEncoder.matches(updatedUser.getPassword(), user.getPassword())) {
@@ -49,15 +50,7 @@ public class UserProfileService implements IUserProfileService {
         userService.saveUser(user);
     }
 
-    private void checkIfEmailExists(String newEmail) throws ProfileException {
-        Optional<User> optionalUser = userService.getUserByEmail(newEmail);
-        if(optionalUser.isPresent()){
-            throw new ProfileException("L'email est déjà utilisé");
-        }
-    }
-
     /**
-     *
      * @return user details email and user name
      */
     public UserDTO getCurrentUserAsDTO() {

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+
 @Data
 public class MoneyTransferDTO {
     @NotNull
@@ -14,4 +15,14 @@ public class MoneyTransferDTO {
     private double amount;
     @NotEmpty
     private String description;
+
+    public MoneyTransferDTO() {
+    }
+
+    public MoneyTransferDTO(int receiverId, int amount, String description) {
+        this.receiverId = receiverId;
+        this.amount = amount;
+        this.description = description;
+
+    }
 }

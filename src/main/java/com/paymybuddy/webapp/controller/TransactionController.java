@@ -23,17 +23,6 @@ public class TransactionController {
     private ITransactionService transactionService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/transactions")
-    public Transaction getTransactions(){
-        Timestamp date = Timestamp.from(Instant.now());
-        User sender = new User();
-        sender.setId(1);
-        User receiver = new User();
-        receiver.setId(2);
-        return new Transaction(10,"gift", date, sender, receiver);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/transactions")
     public Transaction newTransaction(@Valid @RequestBody Transaction newTransaction) {
         logger.info("Adding new transaction as admin");

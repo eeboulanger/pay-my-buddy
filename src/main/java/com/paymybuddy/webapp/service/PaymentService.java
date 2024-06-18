@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +35,7 @@ public class PaymentService implements IPaymentService {
      *                         and the user's description of the transfer
      */
     @Override
+    @Transactional
     public void transferMoney(MoneyTransferDTO moneyTransferDTO) throws UsernameNotFoundException, PaymentException {
         //Get authenticated user id
         User user = authenticationService.getCurrentUser();
@@ -46,7 +46,27 @@ public class PaymentService implements IPaymentService {
         });
 
         validateTransferDetails(user, receiver, moneyTransferDTO.getAmount());
-        executeTransfer(moneyTransferDTO, user, receiver);
+
+        //Create transaction
+        double amount = moneyTransferDTO.getAmount();
+        Timestamp date = Timestamp.from(Instant.now());
+        Transaction transaction = new Transaction(amount, moneyTransferDTO.getDescription(),
+                date, user, receiver);
+
+        logger.debug("Attempt to execute transfer. Sender: " + user + " receiver: " + receiver
+                + " amount: " + amount + " description: " + moneyTransferDTO.getDescription() + " date: " + date);
+
+        try {
+            user.getAccount().debit(amount);
+        } catch (PaymentException e) {
+            logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
+                    user.getId(), receiver.getId(), moneyTransferDTO.getAmount(), e.getMessage(), e);
+            throw new PaymentException("Échec du transfert d'argent " + e.getMessage());
+        }
+        userService.saveUser(user);
+        receiver.getAccount().credit(amount);
+        userService.saveUser(receiver);
+        transactionService.saveTransaction(transaction);
     }
 
     /**
@@ -67,35 +87,9 @@ public class PaymentService implements IPaymentService {
             logger.error("Failed to transfer money. The receiver must be added as a user connection first.");
             throw new PaymentException("La relation doit être ajoutée d'abord");
         }
-        if(user.getEmail().equals(receiver.getEmail())){
+        if (user.getEmail().equals(receiver.getEmail())) {
             logger.error("Failed to transfer money. The receiver can't be the same as the sender");
             throw new PaymentException("Vous ne pouvez pas transférer de l'argent à vous même");
-        }
-    }
-
-    /**
-     * saves the transaction with a timestamp, debits the authenticated users account and credits the receivers account
-     */
-    @Transactional
-    private void executeTransfer(MoneyTransferDTO moneyTransferDTO, User user, User receiver) throws PaymentException {
-        //Create transaction
-        double amount = moneyTransferDTO.getAmount();
-        Timestamp date = Timestamp.from(Instant.now());
-        Transaction transaction = new Transaction(amount, moneyTransferDTO.getDescription(),
-                date, user, receiver);
-
-        logger.debug("Attempt to execute transfer. Sender: " + user + " receiver: " + receiver
-                + " amount: " + amount + " description: " + moneyTransferDTO.getDescription() + " date: " + date);
-        try {
-            transactionService.saveTransaction(transaction);
-            user.getAccount().debit(amount);
-            userService.saveUser(user);
-            receiver.getAccount().credit(amount);
-            userService.saveUser(receiver);
-        } catch (DataAccessException e) {
-            logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
-                    user.getId(), receiver.getId(), amount, e.getMessage(), e);
-            throw new PaymentException("Échec du transfert d'argent");
         }
     }
 

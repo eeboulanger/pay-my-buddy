@@ -31,14 +31,6 @@ public class SignUpService implements ISignUpService {
             logger.error("Failed to create new user. Email already exists in database");
             throw new RegistrationException("Email déjà utilisé");
         }
-        mapToUser(form);
-    }
-
-    /**
-     * create new user and user account based on registration form
-     */
-    @Transactional
-    private void mapToUser(UserDTO form) {
         User user = new User();
         user.setEmail(form.getEmail());
         user.setUsername(form.getUsername());
