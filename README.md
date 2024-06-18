@@ -35,8 +35,8 @@ git clone https://github.com/eeboulanger/pay-my-buddy.git
 
 
 1. **Create database**
-* Run sql script to create schema data/pay_my_buddy_db.sql
-* Run sql script to poulate database for testing data/pay_my_buddy_data.sql (optional) 
+* Run sql script to create schema  [data/pay_my_buddy_db.sql](https://github.com/eeboulanger/pay-my-buddy/blob/dev/data/pay_my_buddy_db.sql)
+* Run sql script to poulate database for testing  [data/pay_my_buddy_data.sql](https://github.com/eeboulanger/pay-my-buddy/blob/dev/data/pay_my_buddy_data.sql) (optional) 
 
 2. **Application.properties**
 * Don't forget to add your own mysql username and password. 
