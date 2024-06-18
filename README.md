@@ -23,7 +23,6 @@ An application for transfering money between friends:
 
 ## Setup with Intellij IDE:
 1. Create project from Initializr: File > New > project > Spring Initializr
-Add lib repository into pom.xml
 
 2. Clone the project:
 git clone https://github.com/eeboulanger/pay-my-buddy.git
