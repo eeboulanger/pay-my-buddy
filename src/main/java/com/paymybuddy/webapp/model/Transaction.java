@@ -1,10 +1,9 @@
 package com.paymybuddy.webapp.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Value;
 
 import java.sql.Timestamp;
 
@@ -18,15 +17,18 @@ public class Transaction {
     private int id;
 
     @NotNull
-    @Min(value = 1, message = "Minimal amount is 1")
-    @Column(name = "amount", nullable = false)
+    @Min(value = 1, message = "Montant minimum est 1")
+    @Column(name = "amount")
     private double amount;
 
-    @NotEmpty
-    @Column(name = "description", nullable = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @NotEmpty(message = "Veuillez ajouter une description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "transaction_date", nullable = false)
+    @NotNull
+    @Column(name = "transaction_date")
     private Timestamp date;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -31,6 +31,7 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
+    //Keep nullable for oauth2 user accounts
     @ToString.Exclude
     @Column(name = "password")
     private String password;
@@ -38,7 +39,7 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Account account;
 
     @ManyToMany(

@@ -15,6 +15,9 @@ import java.util.Set;
  */
 public interface IPaymentService {
 
+    /**
+     * Transfers money between two users account
+     */
     void transferMoney(MoneyTransferDTO dto) throws PaymentException, UserNotFoundException;
 
     Optional<List<Transaction>> getUserTransactions();

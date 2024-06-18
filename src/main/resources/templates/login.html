@@ -21,6 +21,11 @@
                 <div th:if="${param.error}">
                     <div class="alert alert-danger" aria-live="polite">Invalid Email or Password</div>
                 </div>
+                <div th:if="${success}">
+                    <div id="successMessage" class="alert alert-success" aria-live="polite" th:text="${success}">
+                        Successfully created new login. Please login
+                    </div>
+                </div>
                 <div class="row">
                     <div class="mt-5">
                         <div class="mb-3">
@@ -38,14 +43,16 @@
                 </div>
 
                 <div class="m-5">
-                    <button class="btn btn-primary btn-lg" type="submit">Se connecter</button>
+                    <button id="loginButton" class="btn btn-primary btn-lg" type="submit">Se connecter</button>
                 </div>
             </form>
             <div>
-                <a th:href="@{/oauth2/authorization/google}" aria-label="Connexion avec Google">Se connecter avec Google</a>
+                <a th:href="@{/oauth2/authorization/google}" aria-label="Connexion avec Google">Se connecter avec
+                    Google</a>
             </div>
             <div>
-                <a th:href="@{/oauth2/authorization/github}" aria-label="Connexion avec GitHub">Se connecter avec GitHub</a>
+                <a th:href="@{/oauth2/authorization/github}" aria-label="Connexion avec GitHub">Se connecter avec
+                    GitHub</a>
             </div>
 
         </div>

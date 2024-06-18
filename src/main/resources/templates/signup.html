@@ -33,7 +33,7 @@
                         <div class="mb-2">
                             <label for="email" class="col-form-label visually-hidden">Votre email</label>
                             <input type="text" th:field="*{email}" class="form-control formField"
-                                   id="email" name="username" placeholder="Mail" aria-required="true" required/>
+                                   id="email" name="email" placeholder="Mail" aria-required="true" required/>
                             <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger" th:errors="*{email}" aria-invalid="true">
                                 Email
                                 error</p>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="m-5">
-                    <button class="btn btn-primary btn-lg" type="submit">S'inscrire</button>
+                    <button id="submitButton" class="btn btn-primary btn-lg" type="submit">S'inscrire</button>
                 </div>
             </form>
             <div>
@@ -62,7 +62,7 @@
                 <a th:href="@{/oauth2/authorization/github}" aria-label="S'inscrire avec GitHub">S'inscrire avec GitHub</a>
             </div>
             <!-- Show global errors-->
-            <div th:if="${error}" th:text="${error}" class="alert alert-danger" aria-live="polite"></div>
+            <div id="errorMessage" th:if="${error}" th:text="${error}" class="alert alert-danger" aria-live="polite"></div>
         </div>
     </div>
 </main>

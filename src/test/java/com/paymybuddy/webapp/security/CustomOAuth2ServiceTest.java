@@ -1,6 +1,8 @@
-package com.paymybuddy.webapp.service;
+package com.paymybuddy.webapp.security;
 
+import com.paymybuddy.webapp.security.CustomOAuth2Service;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.service.IUserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

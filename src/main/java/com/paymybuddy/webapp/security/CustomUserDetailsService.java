@@ -1,6 +1,7 @@
-package com.paymybuddy.webapp.service;
+package com.paymybuddy.webapp.security;
 
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements ICustomUserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
     @Autowired
     private UserService service;

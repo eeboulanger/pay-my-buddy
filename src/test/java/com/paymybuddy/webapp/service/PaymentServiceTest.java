@@ -2,10 +2,10 @@ package com.paymybuddy.webapp.service;
 
 import com.paymybuddy.webapp.dto.MoneyTransferDTO;
 import com.paymybuddy.webapp.exception.PaymentException;
-import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.model.Account;
 import com.paymybuddy.webapp.model.Transaction;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.security.IAuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class PaymentServiceTest {
     @Mock
-    private IAuthenticationFacade authenticationFacade;
+    private IAuthenticationService authenticationService;
     @Mock
     private Authentication authentication;
     @Mock
@@ -58,15 +58,13 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("Given the amount, user connection and description are valid then transfer money")
-    public void transferMoneyTest() throws PaymentException, UserNotFoundException {
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+    public void transferMoneyTest() throws PaymentException {
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
 
         paymentService.transferMoney(dto);
 
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService, times(1)).getCurrentUser();
         verify(userService, times(1)).getUserById(2);
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
@@ -74,14 +72,12 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Authenticated user not found should throw exception")
     public void transferMoney_whenAuthenticatedUserNotFound_thenThrowException() {
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.empty());
+        when(authenticationService.getCurrentUser()).thenThrow(UsernameNotFoundException.class);
 
         assertThrows(UsernameNotFoundException.class, () ->
                 paymentService.transferMoney(dto));
 
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService, times(1)).getCurrentUser();
         verify(transactionService, never()).saveTransaction(any(Transaction.class));
     }
 
@@ -91,15 +87,13 @@ public class PaymentServiceTest {
         account.setBalance(5.00);
         user.setAccount(account);
 
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
 
         assertThrows(PaymentException.class, () ->
                 paymentService.transferMoney(dto));
 
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService, times(1)).getCurrentUser();
         verify(userService, times(1)).getUserById(2);
         verify(transactionService, never()).saveTransaction(any(Transaction.class));
     }
@@ -109,15 +103,13 @@ public class PaymentServiceTest {
     public void givenReceiverNotAConnection_whenTransferMoney_shouldThrowException() {
         user.getConnections().remove(receiver);
 
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
 
         assertThrows(PaymentException.class, () ->
                 paymentService.transferMoney(dto));
 
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService, times(1)).getCurrentUser();
         verify(userService, times(1)).getUserById(2);
         verify(transactionService, never()).saveTransaction(any(Transaction.class));
     }
@@ -125,16 +117,14 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Saving transaction to database fails, should throw an exception")
     public void saveTransactionFails_whenTransferMoney_shouldThrowException() {
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(userService.getUserById(2)).thenReturn(Optional.of(receiver));
         doThrow(PermissionDeniedDataAccessException.class).when(transactionService).saveTransaction(any(Transaction.class));
 
         assertThrows(PaymentException.class, () ->
                 paymentService.transferMoney(dto));
 
-        verify(authenticationFacade, times(1)).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService, times(1)).getCurrentUser();
         verify(userService, times(1)).getUserById(2);
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
@@ -142,13 +132,11 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Given the user has a list of connections then get user connections should return the list")
     public void getUserConnectionsTest() {
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
 
         Set<User> result = paymentService.getUserConnections().orElse(Collections.emptySet());
 
-        verify(authenticationFacade).getAuthentication();
-        verify(userService).getUserByEmail(authentication.getName());
+        verify(authenticationService).getCurrentUser();
         assertNotNull(result);
         assertTrue(result.contains(receiver));
     }
@@ -158,14 +146,12 @@ public class PaymentServiceTest {
     public void getUserTransactions_whenNoTransactionsTest() {
         List<Transaction> transactions = null;
 
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
 
         Optional<List<Transaction>> result = paymentService.getUserTransactions();
 
-        verify(authenticationFacade).getAuthentication();
-        verify(userService).getUserByEmail(authentication.getName());
+        verify(authenticationService).getCurrentUser();
         verify(transactionService, times(1)).getUserTransactions(user.getId());
         assertTrue(result.isEmpty());
     }
@@ -178,14 +164,12 @@ public class PaymentServiceTest {
         transaction.setSender(user);
         List<Transaction> transactions = List.of(transaction);
 
-        when(authenticationFacade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(user));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
         when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
 
         Optional<List<Transaction>> result = paymentService.getUserTransactions();
 
-        verify(authenticationFacade).getAuthentication();
-        verify(userService).getUserByEmail(authentication.getName());
+        verify(authenticationService).getCurrentUser();
         verify(transactionService, times(1)).getUserTransactions(user.getId());
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());

@@ -1,7 +1,8 @@
-package com.paymybuddy.webapp.service;
+package com.paymybuddy.webapp.security;
 
 import com.paymybuddy.webapp.model.Account;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.service.IUserService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.*;
  * Fetches oauth name and email attributes from provider and saves as new user in database if first connexion.
  */
 @Service
-public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOAuth2Service implements ICustomOAuth2Service {
     private final Logger logger = LoggerFactory.getLogger(CustomOAuth2Service.class);
     private final IUserService userService;
     private final DefaultOAuth2UserService delegate;

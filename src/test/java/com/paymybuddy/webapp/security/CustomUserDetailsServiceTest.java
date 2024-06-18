@@ -1,7 +1,9 @@
-package com.paymybuddy.webapp.service;
+package com.paymybuddy.webapp.security;
 
 
+import com.paymybuddy.webapp.security.CustomUserDetailsService;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

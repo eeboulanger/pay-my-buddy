@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @TestPropertySource("classpath:application-test.properties")
@@ -41,7 +42,7 @@ public class TransactionRepositoryTest {
     }
 
     @Test
-    public void createTransactionTest(){
+    public void createTransactionTest() {
         User sender = new User();
         sender.setId(1);
         User receiver = new User();
@@ -56,5 +57,23 @@ public class TransactionRepositoryTest {
         assertEquals(date, result.getDate());
         assertEquals(1, result.getSender().getId());
         assertEquals(2, result.getReceiver().getId());
+    }
+
+    @Test
+    public void getUserTransactions() {
+        //GIVEN
+        Timestamp date = Timestamp.from(Instant.now());
+        User sender = new User();
+        sender.setId(1);
+        User receiver = new User();
+        receiver.setId(2);
+        Transaction transaction = new Transaction(2, "Gift", date, sender, receiver);
+        repository.save(transaction);
+
+        //WHEN
+        List<Transaction> result = repository.getTransactionsByUserId(1);
+
+        //THEN
+        assertTrue(result.contains(transaction));
     }
 }

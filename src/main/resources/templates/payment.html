@@ -78,25 +78,25 @@
                                 Amount error</p>
                         </div>
                         <div class="col mt-4">
-                            <button type="submit" class="btn btn-primary">Payer</button>
+                            <button id="submitButton" type="submit" class="btn btn-primary">Payer</button>
                         </div>
                     </div>
                 </div>
                 <!-- Error or success message after submitting-->
                 <div th:switch="${message}">
-                    <div th:case="'Success'" class="alert alert-success">
+                    <div id="successMessage" th:case="'success'" class="alert alert-success">
                         <p>Votre transaction a été envoyée avec succès !</p>
                     </div>
                 </div>
                 <!-- Show global errors-->
-                <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+                <div id="errorMessage" th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
 
             </form>
         </section>
 
         <!-- My transactions -->
         <section aria-labelledby="transactions-section">
-            <h2 class="visually-hidden" id= "transactions-section">Transactions</h2>
+            <h2 class="visually-hidden" id="transactions-section">Transactions</h2>
             <div class="container mt-5">
                 <table class="table table-bordered">
                     <caption class="visually-hidden">Transactions de l'utilisateur</caption>

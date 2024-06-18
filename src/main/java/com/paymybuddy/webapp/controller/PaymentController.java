@@ -47,7 +47,7 @@ public class PaymentController {
             try {
                 paymentService.transferMoney(moneyTransfer);
                 logger.info("Money transfer successfully executed");
-                attributes.addFlashAttribute("message", "Success");
+                attributes.addFlashAttribute("message", "success");
                 return "redirect:/payments";
             } catch (PaymentException | UserNotFoundException e) {
                 logger.error("Money transfer failed with error: " + e.getMessage());

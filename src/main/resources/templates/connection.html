@@ -52,11 +52,11 @@
                         </div>
                     </div>
                     <div class="col">
-                        <button type="submit" class="btn-yellow">Ajouter</button>
+                        <button id="submitButton" type="submit" class="btn-yellow">Ajouter</button>
                     </div>
                 </div>
                 <div class="mt-5">
-                    <div th:if="${success}" class="alert alert-success" aria-live="polite">
+                    <div id="successMessage" th:if="${success}" class="alert alert-success" aria-live="polite">
                         <p>La relation a été ajoutée avec succès !</p>
                     </div>
                     <!-- Show global errors-->

@@ -1,4 +1,4 @@
-package com.paymybuddy.webapp.config;
+package com.paymybuddy.webapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

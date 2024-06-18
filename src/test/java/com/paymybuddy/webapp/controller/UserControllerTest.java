@@ -1,11 +1,11 @@
 package com.paymybuddy.webapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
+import com.paymybuddy.webapp.security.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.repository.UserRepository;
-import com.paymybuddy.webapp.service.CustomOAuth2Service;
-import com.paymybuddy.webapp.service.CustomUserDetailsService;
+import com.paymybuddy.webapp.security.CustomOAuth2Service;
+import com.paymybuddy.webapp.security.CustomUserDetailsService;
 import com.paymybuddy.webapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

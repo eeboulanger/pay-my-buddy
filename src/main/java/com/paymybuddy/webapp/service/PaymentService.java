@@ -4,12 +4,12 @@ import com.paymybuddy.webapp.dto.MoneyTransferDTO;
 import com.paymybuddy.webapp.exception.*;
 import com.paymybuddy.webapp.model.Transaction;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.security.IAuthenticationService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.Set;
 public class PaymentService implements IPaymentService {
     private final Logger logger = LoggerFactory.getLogger(PaymentService.class);
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private IAuthenticationService authenticationService;
     @Autowired
     private IUserService userService;
     @Autowired
@@ -36,27 +36,17 @@ public class PaymentService implements IPaymentService {
      *                         and the user's description of the transfer
      */
     @Override
-    @Transactional
     public void transferMoney(MoneyTransferDTO moneyTransferDTO) throws UsernameNotFoundException, PaymentException {
         //Get authenticated user id
-        User user = getCurrentUser();
+        User user = authenticationService.getCurrentUser();
 
         User receiver = userService.getUserById(moneyTransferDTO.getReceiverId()).orElseThrow(() -> {
             logger.error("Failed to find receiver: No user with id " + moneyTransferDTO.getReceiverId() + " was found.");
-                return new PaymentException("Le bénéficiaire n'a pas été trouvé");
+            return new PaymentException("Le bénéficiaire n'a pas été trouvé");
         });
 
         validateTransferDetails(user, receiver, moneyTransferDTO.getAmount());
-
         executeTransfer(moneyTransferDTO, user, receiver);
-    }
-
-    private User getCurrentUser() {
-        Authentication authUser = authenticationFacade.getAuthentication();
-        return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
-            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("L'utilisateur authentifié n'a pas été trouvé"); //Force login if not found
-        });
     }
 
     /**
@@ -75,13 +65,18 @@ public class PaymentService implements IPaymentService {
         //Check that receiver is one of the users connections
         if (!user.getConnections().contains(receiver)) {
             logger.error("Failed to transfer money. The receiver must be added as a user connection first.");
-            throw new PaymentException("La relation a été ajoutée");
+            throw new PaymentException("La relation doit être ajoutée d'abord");
+        }
+        if(user.getEmail().equals(receiver.getEmail())){
+            logger.error("Failed to transfer money. The receiver can't be the same as the sender");
+            throw new PaymentException("Vous ne pouvez pas transférer de l'argent à vous même");
         }
     }
 
     /**
      * saves the transaction with a timestamp, debits the authenticated users account and credits the receivers account
      */
+    @Transactional
     private void executeTransfer(MoneyTransferDTO moneyTransferDTO, User user, User receiver) throws PaymentException {
         //Create transaction
         double amount = moneyTransferDTO.getAmount();
@@ -100,17 +95,18 @@ public class PaymentService implements IPaymentService {
         } catch (DataAccessException e) {
             logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
                     user.getId(), receiver.getId(), amount, e.getMessage(), e);
-            throw new PaymentException("Échec du transfert d'argent: " + e.getMessage());
+            throw new PaymentException("Échec du transfert d'argent");
         }
     }
 
     /**
      * Get users previous transactions and identify those with user as receiver
      *
-     * @return a list of transactions from and to the user order by date
+     * @return a list of transactions from and to the user order by date. The list can be empty
      */
+    @Override
     public Optional<List<Transaction>> getUserTransactions() {
-        User user = getCurrentUser();
+        User user = authenticationService.getCurrentUser();
         List<Transaction> transactions = transactionService.getUserTransactions(user.getId());
         if (transactions != null) {
             transactions.stream().filter(transaction ->
@@ -120,8 +116,12 @@ public class PaymentService implements IPaymentService {
         return Optional.ofNullable(transactions);
     }
 
+    /**
+     * Gets the list of user connections to whom the user can transfer money. The list can be empty
+     */
+    @Override
     public Optional<Set<User>> getUserConnections() {
-        User user = getCurrentUser();
+        User user = authenticationService.getCurrentUser();
         return Optional.ofNullable(user.getConnections());
     }
 }

@@ -1,7 +1,9 @@
 package com.paymybuddy.webapp.service;
 
 import com.paymybuddy.webapp.dto.UserDTO;
+import com.paymybuddy.webapp.exception.ProfileException;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.security.IAuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class UserProfileServiceTest {
     @Mock
-    private IAuthenticationFacade facade;
+    private IAuthenticationService authenticationService;
     @Mock
     private Authentication authentication;
     @Mock
@@ -31,15 +33,15 @@ public class UserProfileServiceTest {
     private IUserService userService;
     @InjectMocks
     private UserProfileService profileService;
-    private User authUser;
+    private User user;
 
     @BeforeEach
     public void setUp() {
-        authUser = new User();
-        authUser.setEmail("john_doe@mail.com");
-        authUser.setId(1);
-        authUser.setPassword("ValidPassword@12");
-        authUser.setUsername("John_Doe");
+        user = new User();
+        user.setEmail("john_doe@mail.com");
+        user.setId(1);
+        user.setPassword("ValidPassword@12");
+        user.setUsername("John_Doe");
     }
 
     @Test
@@ -49,12 +51,11 @@ public class UserProfileServiceTest {
         updatedUser.setUsername("My new username");
         updatedUser.setPassword("NewValidPass@12");
 
-        when(facade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.of(authUser));
+        when(authenticationService.getCurrentUser()).thenReturn(user);
 
         assertDoesNotThrow(() -> profileService.updateUser(updatedUser));
-        verify(facade).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService).getCurrentUser();
+        verify(userService, times(1)).saveUser(user);
     }
 
     @Test
@@ -62,11 +63,21 @@ public class UserProfileServiceTest {
     public void updateUserFailsTest() {
         UserDTO updatedUser = new UserDTO();
 
-        when(facade.getAuthentication()).thenReturn(authentication);
-        when(userService.getUserByEmail(authentication.getName())).thenReturn(Optional.empty());
+        when(authenticationService.getCurrentUser()).thenThrow(UsernameNotFoundException.class);
 
         assertThrows(UsernameNotFoundException.class, () -> profileService.updateUser(updatedUser));
-        verify(facade).getAuthentication();
-        verify(userService, times(1)).getUserByEmail(authentication.getName());
+        verify(authenticationService).getCurrentUser();
+    }
+
+    @Test
+    @DisplayName("Given the email is already in use, when update user, then throw exception")
+    public void updateUser_whenEmailExistsTest() {
+        UserDTO dto = new UserDTO();
+        dto.setEmail("jane_doe@mail.com");
+        when(authenticationService.getCurrentUser()).thenReturn(user);
+        when(userService.getUserByEmail(dto.getEmail())).thenReturn(Optional.of(user));
+
+        assertThrows(ProfileException.class, () -> profileService.updateUser(dto));
+        verify(authenticationService).getCurrentUser();
     }
 }

@@ -21,8 +21,6 @@ public class SignUpServiceTests {
     @Mock
     private IUserService userService;
     @Mock
-    private IAccountService accountService;
-    @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @InjectMocks
     private SignUpService service;

@@ -1,6 +1,7 @@
 package com.paymybuddy.webapp.controller;
 
 import com.paymybuddy.webapp.dto.UserDTO;
+import com.paymybuddy.webapp.exception.ProfileException;
 import com.paymybuddy.webapp.service.IUserProfileService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -25,11 +26,10 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String getProfile(Model model, Authentication authentication) {
-        logger.info("authentified as: "+authentication.getAuthorities());
         if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
             return "oauth_profile";
         }
-        UserDTO user = profileService.getCurrentUser();
+        UserDTO user = profileService.getCurrentUserAsDTO();
         model.addAttribute("userDTO", user);
         return "profile";
     }
@@ -50,9 +50,15 @@ public class ProfileController {
             logger.error("Result binding has errors");
             return "profile";
         } else {
-            attributes.addFlashAttribute("message", "Success");
-            attributes.addFlashAttribute("alertClass", "alert-success");
-            profileService.updateUser(userDTO);
+            try {
+                profileService.updateUser(userDTO);
+                attributes.addFlashAttribute("message", "success");
+                attributes.addFlashAttribute("success", "Votre profil a été modifié avec succès");
+            } catch (ProfileException e) {
+                logger.error("Failed to update profile: " + e.getMessage());
+                attributes.addFlashAttribute("message", "error");
+                attributes.addFlashAttribute("error", e.getMessage());
+            }
             return "redirect:/profile";
         }
     }

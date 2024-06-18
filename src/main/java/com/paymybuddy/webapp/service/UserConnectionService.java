@@ -2,19 +2,18 @@ package com.paymybuddy.webapp.service;
 
 import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.model.User;
+import com.paymybuddy.webapp.security.IAuthenticationService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserConnectionService implements IUserConnectionService {
     private final Logger logger = LoggerFactory.getLogger(UserConnectionService.class);
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private IAuthenticationService authenticationService;
     @Autowired
     private UserService userService;
 
@@ -26,29 +25,20 @@ public class UserConnectionService implements IUserConnectionService {
     @Override
     @Transactional
     public void addUserConnection(String email) throws UserNotFoundException {
-        //Check if the user is the same as auth user
-
         //Check if user exists in database
         User userConnection = userService.getUserByEmail(email).orElseThrow(() -> {
             logger.error("Failed to create new user connection. No user with email: " + email + " was found.");
             return new UserNotFoundException("Aucun utilisateur trouvé avec email: " + email);
         });
 
-        User user = getAuthenticatedUser();
+        User user = authenticationService.getCurrentUser();
         if (email.equals(user.getEmail())) {
             logger.error("Failed to create new user connection. The email: " + email + " is identical to the current users email");
-            throw new UserNotFoundException("Aucun utilisateur trouvé avec email: " + email);
+            throw new UserNotFoundException("L'addresse mail doit être différent de la votre");
         }
 
         user.getConnections().add(userConnection);
         userService.saveUser(user);
     }
 
-    private User getAuthenticatedUser() {
-        Authentication authUser = authenticationFacade.getAuthentication();
-        return userService.getUserByEmail(authUser.getName()).orElseThrow(() -> {
-            logger.error("Failed to find authenticated user: No user with email " + authUser.getName() + " was found.");
-            return new UsernameNotFoundException("L'utilisateur authentifié n'a pas été trouvé"); //Force new login
-        });
-    }
 }

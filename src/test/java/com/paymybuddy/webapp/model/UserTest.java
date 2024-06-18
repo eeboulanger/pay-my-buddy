@@ -13,11 +13,13 @@ public class UserTest {
         user.setUsername("John");
         user.setEmail("john.doe@example.com");
         user.setPassword("password123");
+        user.setRole("USER");
 
         assertEquals(1L, user.getId());
         assertEquals("John", user.getUsername());
         assertEquals("john.doe@example.com", user.getEmail());
         assertEquals("password123", user.getPassword());
+        assertEquals("USER", user.getRole());
     }
 
     @Test
@@ -27,6 +29,7 @@ public class UserTest {
         user.setUsername("John");
         user.setEmail("john.doe@example.com");
         user.setPassword("password123");
+        user.setRole("USER");
 
         String userString = user.toString();
         assertFalse(userString.contains("password123"));
@@ -39,12 +42,14 @@ public class UserTest {
         user1.setUsername("John");
         user1.setEmail("john.doe@example.com");
         user1.setPassword("password123");
+        user1.setRole("USER");
 
         User user2 = new User();
         user2.setId(1);
         user2.setUsername("John");
         user2.setEmail("john.doe@example.com");
         user2.setPassword("password123");
+        user2.setRole("USER");
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());

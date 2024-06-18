@@ -1,6 +1,8 @@
 package com.paymybuddy.webapp.controller;
 
-import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
+import com.paymybuddy.webapp.security.CustomOAuth2Service;
+import com.paymybuddy.webapp.security.CustomUserDetailsService;
+import com.paymybuddy.webapp.security.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.exception.RegistrationException;
 import com.paymybuddy.webapp.repository.UserRepository;

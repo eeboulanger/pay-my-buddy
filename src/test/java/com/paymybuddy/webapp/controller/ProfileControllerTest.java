@@ -1,10 +1,10 @@
 package com.paymybuddy.webapp.controller;
 
-import com.paymybuddy.webapp.config.SpringSecurityConfiguration;
+import com.paymybuddy.webapp.security.SpringSecurityConfiguration;
 import com.paymybuddy.webapp.dto.UserDTO;
 import com.paymybuddy.webapp.repository.UserRepository;
-import com.paymybuddy.webapp.service.CustomOAuth2Service;
-import com.paymybuddy.webapp.service.CustomUserDetailsService;
+import com.paymybuddy.webapp.security.CustomOAuth2Service;
+import com.paymybuddy.webapp.security.CustomUserDetailsService;
 import com.paymybuddy.webapp.service.IUserProfileService;
 import com.paymybuddy.webapp.service.IUserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +61,7 @@ public class ProfileControllerTest {
                         .param("password", userDTO.getPassword()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile"))
-                .andExpect(flash().attribute("message", "Success"));
+                .andExpect(flash().attribute("message", "success"));
 
         verify(userProfileService, times(1)).updateUser(userDTO);
     }

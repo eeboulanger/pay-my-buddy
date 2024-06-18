@@ -53,7 +53,7 @@ public class UserServiceTests {
     }
 
     @Test
-    @DisplayName("Create user should save client in database and return user as an object")
+    @DisplayName("Create user should save user in database and return user as an object")
     public void createClientTest() {
         User saved = new User();
         when(repository.save(user)).thenReturn(saved);
@@ -78,7 +78,7 @@ public class UserServiceTests {
 
     @Test
     @DisplayName("Given there's no user with the id, then return empty")
-    public void givenThereIsNoUserWithId_whenGetByEmail_thenReturnEmpty() {
+    public void givenThereIsNoUserWithId_whenGetById_thenReturnEmpty() {
         when(repository.findById(1)).thenReturn(Optional.empty());
 
         Optional<User> result = service.getUserById(1);

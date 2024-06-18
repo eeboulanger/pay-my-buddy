@@ -37,6 +37,8 @@ public class SignUpController {
             try {
                 logger.info("Creating a new user: " + form.getUsername());
                 signUpService.signUp(form);
+                redirectAttributes.addFlashAttribute("success",
+                        "Votre compte a été créé avec succès ! Veuillez vous connecter");
                 return "redirect:/login";
             } catch (RegistrationException e) {
                 logger.error(e.getMessage());

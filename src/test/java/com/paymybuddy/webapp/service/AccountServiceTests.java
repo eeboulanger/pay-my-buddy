@@ -12,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +35,7 @@ public class AccountServiceTests {
         assertEquals(account, optional.get());
         verify(repository, times(1)).findById(1);
     }
+
     @Test
     @DisplayName("Given there is no account for user, then return empty")
     public void getUserAccount_whenNoUser_shouldReturnEmpty() {
@@ -47,5 +47,13 @@ public class AccountServiceTests {
         verify(repository, times(1)).findById(1);
     }
 
+    @Test
+    public void saveAccountTest() {
+        Account account = new Account();
+        when(repository.save(account)).thenReturn(account);
 
+        Account result = service.saveAccount(account);
+
+        assertNotNull(result);
+    }
 }

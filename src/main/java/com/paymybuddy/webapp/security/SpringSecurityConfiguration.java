@@ -1,7 +1,5 @@
-package com.paymybuddy.webapp.config;
+package com.paymybuddy.webapp.security;
 
-import com.paymybuddy.webapp.service.CustomOAuth2Service;
-import com.paymybuddy.webapp.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +22,9 @@ import java.util.*;
 @EnableMethodSecurity
 public class SpringSecurityConfiguration {
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private ICustomUserDetailsService customUserDetailsService;
     @Autowired
-    private CustomOAuth2Service customOAuth2Service;
+    private ICustomOAuth2Service customOAuth2Service;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
