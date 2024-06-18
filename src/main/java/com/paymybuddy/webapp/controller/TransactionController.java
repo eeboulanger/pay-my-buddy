@@ -4,6 +4,7 @@ import com.paymybuddy.webapp.model.Transaction;
 import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.service.ITransactionService;
 import jakarta.validation.Valid;
+import org.hibernate.validator.constraints.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/transactions")
 public class TransactionController {
 
     private final Logger logger = LoggerFactory.getLogger(TransactionController.class);
@@ -23,21 +25,27 @@ public class TransactionController {
     private ITransactionService transactionService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/transactions")
+    @GetMapping("/users/{id}")
+    public List<Transaction> getTransactionsPerUser(@PathVariable int id){
+        return transactionService.getUserTransactions(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
     public Transaction newTransaction(@Valid @RequestBody Transaction newTransaction) {
         logger.info("Adding new transaction as admin");
         return transactionService.saveTransaction(newTransaction);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/transactions")
+    @PutMapping
     public Transaction updateAccount(@Valid @RequestBody Transaction newTransaction) {
         return transactionService.saveTransaction(newTransaction);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/transactions")
-    public void deleteAccount(@RequestParam("id") int id) {
+    @DeleteMapping("/{id}")
+    public void deleteAccount(@PathVariable("id") int id) {
         transactionService.deleteTransaction(id);
     }
 }

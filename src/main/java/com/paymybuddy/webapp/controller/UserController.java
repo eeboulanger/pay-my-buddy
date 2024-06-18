@@ -9,26 +9,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private IUserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/users")
+    @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         return userService.saveUser(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/users")
+    @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         return userService.saveUser(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/users")
-    public void deleteUser(@RequestParam("id") int id) {
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable("id") int id) {
         userService.deleteById(id);
     }
 

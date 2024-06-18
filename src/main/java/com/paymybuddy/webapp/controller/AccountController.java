@@ -8,26 +8,27 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/accounts")
 public class AccountController {
 
     @Autowired
     private IAccountService accountService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/accounts")
+    @PostMapping
     public Account createAccount(@Valid @RequestBody Account newAccount) {
         return accountService.saveAccount(newAccount);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/accounts")
+    @PutMapping
     public Account updateAccount(@Valid @RequestBody Account newAccount) {
         return accountService.saveAccount(newAccount);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/accounts")
-    public void deleteAccount(@RequestParam("id") int id) {
+    @DeleteMapping("/{id}")
+    public void deleteAccount(@PathVariable("id") int id) {
         accountService.deleteAccount(id);
     }
 }

@@ -95,8 +95,7 @@ public class AccountControllerTest {
     @DisplayName("Given authenticated as admin when delete new account should succeed")
     @WithMockUser(roles = "ADMIN")
     public void deleteAccountAsAdmin_shouldSucceedTest() throws Exception {
-        mockMvc.perform(delete("/accounts")
-                        .param("id", "1")
+        mockMvc.perform(delete("/accounts/{id}", 1)
                         .with(csrf()))
                 .andExpect(status().isOk());
         verify(accountService, times(1)).deleteAccount(1);
@@ -106,8 +105,7 @@ public class AccountControllerTest {
     @DisplayName("Given authenticated as user when deleting an account should fail")
     @WithMockUser(username = "user", roles = "USER")
     public void deleteAccount_whenAuthenticatedAsUser_shouldFail() throws Exception {
-        mockMvc.perform(delete("/accounts")
-                        .param("id", "1")
+        mockMvc.perform(delete("/accounts/{id}", 1)
                         .with(csrf()))
                 .andExpect(status().isForbidden());
 
