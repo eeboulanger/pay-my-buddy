@@ -31,6 +31,7 @@ git clone https://github.com/eeboulanger/pay-my-buddy.git
 
 ### MPD
 ![MPD](https://github.com/eeboulanger/pay-my-buddy/blob/dev/src/main/resources/readme/MPD.png)
+![MPD](https://github.com/eeboulanger/pay-my-buddy/blob/main/src/main/resources/readme/MPD2.png)
 
 
 
