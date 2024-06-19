@@ -1,0 +1,84 @@
+.connexionContainer {
+    width: 31rem;
+    height: 43rem;
+}
+
+.contentContainer{
+    width:40rem;
+    margin-top:10rem;
+}
+
+#buttonLogo {
+    width: 13rem;
+    height: 4rem;
+    background-color: #F69F1D;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: none;
+    border-radius:10px;
+    user-select: none;
+    cursor: default;       /* Show default cursor to indicate non-clickability */
+    pointer-events: none;
+    text-decoration-color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px  1px 0 #000,
+    1px  1px 0 #000;
+}
+
+#formFields{
+    height:2.5rem;;
+    width:18.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.container {
+    display: grid;
+    place-items: center;
+    height: 100%;
+}
+
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+
+
+.navbar-nav .nav-item.active .nav-link {
+    color: blue;
+}
+
+.btn-yellow{
+    width:6rem;
+    height:3rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color:#F69F1D;
+    color:white;
+    border: none;
+    border-radius:10px;
+}
+
+.center{
+    margin:auto;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
