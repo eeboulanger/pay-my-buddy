@@ -1,9 +1,7 @@
 package com.paymybuddy.webapp.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,11 +21,15 @@ public class User {
 
     @Column(name = "username")
     @NotBlank
+    @NotNull
+    @NotEmpty
     @Size(min = 1, max = 50)
     private String username;
 
     @Email
     @NotBlank
+    @NotEmpty
+    @NotNull
     @Column(name = "email", unique = true)
     private String email;
 
@@ -36,6 +38,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @NotNull
+    @NotBlank
+    @NotEmpty
     @Column(name = "role")
     private String role;
 
@@ -43,7 +48,7 @@ public class User {
     private Account account;
 
     @ManyToMany(
-            fetch = FetchType.EAGER)
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_connections",
             joinColumns = @JoinColumn(name = "user_id"),

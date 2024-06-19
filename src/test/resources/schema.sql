@@ -7,13 +7,13 @@ CREATE TABLE users (
   username VARCHAR(50) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(100),
-  role VARCHAR(45));
+  role VARCHAR(45) NOT NULL);
 
 DROP TABLE IF EXISTS accounts;
 
 CREATE TABLE accounts (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  balance DOUBLE NOT NULL DEFAULT 0.00,
+  balance DOUBLE NOT NULL,
   user_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
 

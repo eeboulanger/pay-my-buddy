@@ -2,6 +2,9 @@ package com.paymybuddy.webapp.repository;
 
 import com.paymybuddy.webapp.exception.PaymentException;
 import com.paymybuddy.webapp.model.Account;
+import com.paymybuddy.webapp.model.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -9,8 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestPropertySource("classpath:application-test.properties")
@@ -50,5 +52,27 @@ public class AccountRepositoryTest {
 
         Optional<Account> result = repository.findById(1);
         assertTrue(result.isEmpty());
+    }
+
+    @Nested
+    class ValidationTests {
+        private Account account;
+
+        @BeforeEach
+        public void setUp() {
+            User user = new User();
+            user.setId(1);
+
+            account = new Account();
+            account.setUser(user);
+        }
+
+        @Test
+        public void whenUserIdNull_thenFailToSave() {
+            //Given user id is null
+            account.setUser(null);
+
+            assertThrows(Exception.class, () -> repository.save(account));
+        }
     }
 }

@@ -36,7 +36,7 @@ public class PaymentService implements IPaymentService {
      */
     @Override
     @Transactional
-    public void transferMoney(MoneyTransferDTO moneyTransferDTO) throws UsernameNotFoundException, PaymentException {
+    public void transferMoney(MoneyTransferDTO moneyTransferDTO) throws PaymentException {
         //Get authenticated user id
         User user = authenticationService.getCurrentUser();
 
@@ -45,6 +45,7 @@ public class PaymentService implements IPaymentService {
             return new PaymentException("Le bénéficiaire n'a pas été trouvé");
         });
 
+        //Throws exception
         validateTransferDetails(user, receiver, moneyTransferDTO.getAmount());
 
         //Create transaction
@@ -53,16 +54,6 @@ public class PaymentService implements IPaymentService {
         Transaction transaction = new Transaction(amount, moneyTransferDTO.getDescription(),
                 date, user, receiver);
 
-        logger.debug("Attempt to execute transfer. Sender: " + user + " receiver: " + receiver
-                + " amount: " + amount + " description: " + moneyTransferDTO.getDescription() + " date: " + date);
-
-        try {
-            user.getAccount().debit(amount);
-        } catch (PaymentException e) {
-            logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
-                    user.getId(), receiver.getId(), moneyTransferDTO.getAmount(), e.getMessage(), e);
-            throw new PaymentException("Échec du transfert d'argent " + e.getMessage());
-        }
         userService.saveUser(user);
         receiver.getAccount().credit(amount);
         userService.saveUser(receiver);
@@ -70,23 +61,27 @@ public class PaymentService implements IPaymentService {
     }
 
     /**
-     * Validates that the funds are sufficient and that the receiver is part of the users connections
+     * Validates the amount and that the receiver is part of the users connections
      */
     private void validateTransferDetails(User user, User receiver, double amount) throws PaymentException {
         logger.debug("Validate transfer details; sender: " + user + " receiver: " + receiver
                 + " amount: " + amount);
 
-        //Check that amount isn't greater than current balance
-        if (user.getAccount().getBalance() < amount) {
-            logger.error("Failed to transfer money. The amount is higher than the current available balance." +
-                    "Amount: " + amount + " balance: " + user.getAccount().getBalance());
-            throw new PaymentException("Les fonds sont insuffisants");
+        //Check if funds are sufficient
+        try {
+            user.getAccount().debit(amount);
+        } catch (PaymentException exception) {
+            logger.error("Failed to save transaction from user {} to receiver {} with the amount {} : {}",
+                    user.getId(), receiver.getId(), amount, exception.getMessage(), exception);
+            throw exception;
         }
         //Check that receiver is one of the users connections
         if (!user.getConnections().contains(receiver)) {
             logger.error("Failed to transfer money. The receiver must be added as a user connection first.");
             throw new PaymentException("La relation doit être ajoutée d'abord");
         }
+
+        //assert email is different the sender's email
         if (user.getEmail().equals(receiver.getEmail())) {
             logger.error("Failed to transfer money. The receiver can't be the same as the sender");
             throw new PaymentException("Vous ne pouvez pas transférer de l'argent à vous même");
@@ -99,7 +94,7 @@ public class PaymentService implements IPaymentService {
      * @return a list of transactions from and to the user order by date. The list can be empty
      */
     @Override
-    public Optional<List<Transaction>> getUserTransactions() {
+    public Optional<List<Transaction>> getCurrentUserTransactions() {
         User user = authenticationService.getCurrentUser();
         List<Transaction> transactions = transactionService.getUserTransactions(user.getId());
         if (transactions != null) {
@@ -115,7 +110,6 @@ public class PaymentService implements IPaymentService {
      */
     @Override
     public Optional<Set<User>> getUserConnections() {
-        User user = authenticationService.getCurrentUser();
-        return Optional.ofNullable(user.getConnections());
+        return Optional.ofNullable(authenticationService.getCurrentUser().getConnections());
     }
 }

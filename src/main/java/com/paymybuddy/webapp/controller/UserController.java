@@ -5,7 +5,6 @@ import com.paymybuddy.webapp.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +13,12 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public Iterable<User> getAllUsers(){
+        return userService.getAllUsers();
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

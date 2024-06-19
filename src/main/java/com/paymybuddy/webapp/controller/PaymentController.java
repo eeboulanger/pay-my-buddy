@@ -30,7 +30,7 @@ public class PaymentController {
     @GetMapping("/payments")
     public String getMoneyTransactions(Model model) {
         Set<User> connections = paymentService.getUserConnections().orElse(Collections.emptySet());
-        List<Transaction> transactions = paymentService.getUserTransactions().orElse(Collections.emptyList());
+        List<Transaction> transactions = paymentService.getCurrentUserTransactions().orElse(Collections.emptyList());
 
         model.addAttribute("transactions", transactions);
         model.addAttribute("connections", connections);

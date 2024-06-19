@@ -2,6 +2,8 @@ package com.paymybuddy.webapp.repository;
 
 import com.paymybuddy.webapp.model.Transaction;
 import com.paymybuddy.webapp.model.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,8 +13,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestPropertySource("classpath:application-test.properties")
@@ -75,5 +76,45 @@ public class TransactionRepositoryTest {
 
         //THEN
         assertTrue(result.contains(transaction));
+    }
+
+    @Nested
+    class ValidationTests {
+
+        private Transaction transaction;
+        @BeforeEach
+        public void setUp(){
+           User sender = new User();
+            sender.setId(1);
+            User receiver = new User();
+            receiver.setId(2);
+            transaction = new Transaction(10, "Gift", Timestamp.from(Instant.now()), sender, receiver);
+
+        }
+        @Test
+        public void whenDescriptionNull_thenFailSave() {
+            transaction.setDescription(null);
+
+            assertThrows(Exception.class, () -> repository.save(transaction));
+        }
+
+        @Test
+        public void whenSenderNull_thenFailSave() {
+            transaction.setSender(null);
+
+            assertThrows(Exception.class, () -> repository.save(transaction));
+        }
+        @Test
+        public void whenReceiverNull_thenFailSave() {
+            transaction.setReceiver(null);
+
+            assertThrows(Exception.class, () -> repository.save(transaction));
+        }
+        @Test
+        public void whenDateNull_thenFailSave() {
+            transaction.setDate(null);
+
+            assertThrows(Exception.class, () -> repository.save(transaction));
+        }
     }
 }

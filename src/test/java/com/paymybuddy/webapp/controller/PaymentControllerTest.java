@@ -152,7 +152,7 @@ public class PaymentControllerTest {
         @WithMockUser(roles = "USER")
         @DisplayName("Given the user has done previous transactions, when add transactions to model")
         public void getMoneyTransactionsTest() throws Exception {
-            when(paymentService.getUserTransactions()).thenReturn(Optional.of(transactions));
+            when(paymentService.getCurrentUserTransactions()).thenReturn(Optional.of(transactions));
 
             mockMvc.perform(get("/payments")
                             .with(csrf()))

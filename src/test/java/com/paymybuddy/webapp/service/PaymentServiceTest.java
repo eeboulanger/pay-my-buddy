@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -149,7 +148,7 @@ public class PaymentServiceTest {
         when(authenticationService.getCurrentUser()).thenReturn(user);
         when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
 
-        Optional<List<Transaction>> result = paymentService.getUserTransactions();
+        Optional<List<Transaction>> result = paymentService.getCurrentUserTransactions();
 
         verify(authenticationService).getCurrentUser();
         verify(transactionService, times(1)).getUserTransactions(user.getId());
@@ -167,7 +166,7 @@ public class PaymentServiceTest {
         when(authenticationService.getCurrentUser()).thenReturn(user);
         when(transactionService.getUserTransactions(user.getId())).thenReturn(transactions);
 
-        Optional<List<Transaction>> result = paymentService.getUserTransactions();
+        Optional<List<Transaction>> result = paymentService.getCurrentUserTransactions();
 
         verify(authenticationService).getCurrentUser();
         verify(transactionService, times(1)).getUserTransactions(user.getId());

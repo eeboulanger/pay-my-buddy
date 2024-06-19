@@ -20,7 +20,7 @@ public interface IPaymentService {
      */
     void transferMoney(MoneyTransferDTO dto) throws PaymentException, UserNotFoundException;
 
-    Optional<List<Transaction>> getUserTransactions();
+    Optional<List<Transaction>> getCurrentUserTransactions();
 
     Optional<Set<User>> getUserConnections();
 }

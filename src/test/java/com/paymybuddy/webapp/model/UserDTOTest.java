@@ -1,20 +1,23 @@
 package com.paymybuddy.webapp.model;
 
 import com.paymybuddy.webapp.dto.UserDTO;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(Enclosed.class)
 public class UserDTOTest {
 
     @Test
@@ -72,8 +75,11 @@ public class UserDTOTest {
 
         @BeforeEach
         public void setUp() {
+            //Set up with valid fields
+            form = new UserDTO();
             form.setUsername("Jane_Doe");
-            form.setPassword("password");
+            form.setPassword("ValidPass@1");
+            form.setEmail("valid@mail.com");
         }
 
         @Test
@@ -111,10 +117,46 @@ public class UserDTOTest {
 
         @Test
         public void givenPasswordContainsNoDigits_whenUsingRegulaExpressions_thenPasswordIsInValid() {
-            form.setPassword("AbCD123@");
+            form.setPassword("AbCDEFGH@");
 
             var violations = validator.validateProperty(form, "password");
             assertFalse(violations.isEmpty());
+        }
+
+
+        @Test
+        public void whenNotEmptyName_thenNoConstraintViolations() {
+            form.setUsername("John");
+            Set<ConstraintViolation<UserDTO>> violations = validator.validate(form);
+
+            assertThat(violations.size()).isEqualTo(0);
+        }
+
+        @Test
+        public void whenEmptyName_thenConstraintViolation() {
+            form.setUsername("");
+            Set<ConstraintViolation<UserDTO>> violations = validator.validate(form);
+
+            assertTrue(violations.stream().anyMatch(violation
+                    -> violation.getConstraintDescriptor().getAnnotation().annotationType().equals(NotEmpty.class)));
+        }
+
+        @Test
+        public void whenNullName_thenConstraintViolation() {
+            form.setUsername(null);
+            Set<ConstraintViolation<UserDTO>> violations = validator.validate(form);
+
+            assertTrue(violations.stream().anyMatch(violation
+                    -> violation.getConstraintDescriptor().getAnnotation().annotationType().equals(NotNull.class)));
+        }
+
+        @Test
+        public void whenBlankName_thenConstraintViolation() {
+            form.setUsername(" ");
+            Set<ConstraintViolation<UserDTO>> violations = validator.validate(form);
+
+            assertTrue(violations.stream().anyMatch(violation
+                    -> violation.getConstraintDescriptor().getAnnotation().annotationType().equals(NotBlank.class)));
         }
     }
 }

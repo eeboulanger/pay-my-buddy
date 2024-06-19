@@ -33,8 +33,8 @@ public class SignUpServiceIT {
     private SignUpService signUpService;
 
     @Test
-    @DisplayName("Given saving user fails, when sign up new user, then throw email not unique exception")
-    public void givenTransactionalFails_whenSignUp_thenDoNotCreateNewClient() {
+    @DisplayName("Given saving user fails, when sign up new user, then throw exception and rollback")
+    public void givenTransactionalFails_whenSignUp_thenDoNotCreateNewUser() {
         //GIVEN
         UserDTO form = new UserDTO();
         form.setUsername("New user");

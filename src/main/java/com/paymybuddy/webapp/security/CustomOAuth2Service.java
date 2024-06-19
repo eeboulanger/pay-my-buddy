@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -34,6 +33,7 @@ public class CustomOAuth2Service implements ICustomOAuth2Service {
     }
 
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
@@ -55,10 +55,20 @@ public class CustomOAuth2Service implements ICustomOAuth2Service {
             logger.info("User exists, logging in");
         } else {
             logger.info("User doesn't exist: " + email + " creating new user in database");
-            saveUserAndAccount(email, name);
+            User user = new User();
+            user.setEmail(email);
+            user.setUsername(name);
+            user.setRole("USER");
+            user = userService.saveUser(user);
+
+            Account account = new Account();
+            account.setBalance(0.00);
+            account.setUser(user);
+            user.setAccount(account);
+            userService.saveUser(user);
         }
 
-        //Only store email and username attributes in database
+        //Only store email and username attributes
         Map<String, Object> filteredAttributes = new HashMap<>();
         filteredAttributes.put("email", email);
         filteredAttributes.put("name", name);
@@ -68,27 +78,6 @@ public class CustomOAuth2Service implements ICustomOAuth2Service {
                 filteredAttributes,
                 "email"
         );
-    }
-
-    /**
-     * Saves a new user with a user account to the database
-     *
-     * @param email and name of the user
-     */
-
-    @Transactional
-    private void saveUserAndAccount(String email, String name) {
-        User user = new User();
-        user.setEmail(email);
-        user.setUsername(name);
-        user.setRole("USER");
-        user = userService.saveUser(user);
-
-        Account account = new Account();
-        account.setBalance(0.00);
-        account.setUser(user);
-        user.setAccount(account);
-        userService.saveUser(user);
     }
 }
 

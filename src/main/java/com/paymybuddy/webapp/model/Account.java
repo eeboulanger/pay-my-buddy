@@ -19,14 +19,13 @@ public class Account {
     @Column(name = "balance")
     private double balance;
 
-    @ToString.Exclude
     @OneToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     public void debit(double amount) throws PaymentException {
         if (balance < amount) {
-            throw new PaymentException("Funds are insufficient");
+            throw new PaymentException("Les fonds sont insuffisants");
         } else {
             balance -= amount;
         }

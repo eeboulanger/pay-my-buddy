@@ -30,8 +30,7 @@ public class UserProfileService implements IUserProfileService {
     public void updateUser(UserDTO updatedUser) throws ProfileException {
         User user = authenticationService.getCurrentUser();
 
-        if (!updatedUser.getEmail().equals(user.getEmail())) {
-
+        if (!updatedUser.getEmail().equalsIgnoreCase(user.getEmail())) {
             boolean emailAvailable = userService.getUserByEmail(updatedUser.getEmail()).isEmpty();
             if (!emailAvailable) {
                 throw new ProfileException("L'email est déjà utilisé");

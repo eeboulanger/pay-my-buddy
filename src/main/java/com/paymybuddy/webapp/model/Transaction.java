@@ -24,6 +24,7 @@ public class Transaction {
     @NotNull
     @Size(min = 1, max = 100)
     @NotEmpty(message = "Veuillez ajouter une description")
+    @NotBlank
     @Column(name = "description")
     private String description;
 

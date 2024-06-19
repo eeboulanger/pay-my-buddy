@@ -8,6 +8,7 @@ import java.util.Optional;
  * Any class that handles user operations
  */
 public interface IUserService {
+    Iterable<User> getAllUsers();
     Optional<User> getUserByEmail(String email);
 
     Optional<User> getUserById(int userId);

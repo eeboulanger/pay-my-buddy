@@ -10,9 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +29,7 @@ public class UserServiceTests {
     @BeforeEach
     public void setUp() {
         user = new User();
+        user.setEmail("JoHn@mail.com");
     }
 
     @Test
@@ -53,15 +56,14 @@ public class UserServiceTests {
     }
 
     @Test
-    @DisplayName("Create user should save user in database and return user as an object")
+    @DisplayName("Create user should save user in database with email in lower case and return user as an object")
     public void createClientTest() {
-        User saved = new User();
-        when(repository.save(user)).thenReturn(saved);
+        when(repository.save(user)).thenReturn(user);
 
         User result = service.saveUser(user);
 
         assertNotNull(result);
-        assertEquals(saved, result);
+        assertEquals(user.getEmail().toLowerCase(), result.getEmail());
     }
 
     @Test
@@ -90,5 +92,15 @@ public class UserServiceTests {
     @DisplayName("Given there's a user when delete user, then delete user from database")
     public void deleteUserSuccessTest() {
         assertDoesNotThrow(() -> service.deleteById(1));
+    }
+
+    @Test
+    public void getAllUsersTest() {
+        Iterable<User> iterable = mock(Iterable.class);
+
+        when(repository.findAll()).thenReturn(iterable);
+
+        Iterable<User> result = service.getAllUsers();
+        assertEquals(result, iterable);
     }
 }

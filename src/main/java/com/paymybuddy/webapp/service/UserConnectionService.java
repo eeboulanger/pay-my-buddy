@@ -3,7 +3,6 @@ package com.paymybuddy.webapp.service;
 import com.paymybuddy.webapp.exception.UserNotFoundException;
 import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.security.IAuthenticationService;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

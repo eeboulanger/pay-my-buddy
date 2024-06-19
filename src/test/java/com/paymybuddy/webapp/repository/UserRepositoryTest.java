@@ -3,6 +3,7 @@ package com.paymybuddy.webapp.repository;
 import com.paymybuddy.webapp.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -88,5 +89,48 @@ public class UserRepositoryTest {
 
         Optional<User> result = repository.findById(1);
         assertTrue(result.isEmpty());
+    }
+
+    @Nested
+    class ValidationTests {
+        private User user;
+
+        @BeforeEach
+        public void setUp() {
+            user = new User();
+            user.setUsername("Valid username");
+            user.setEmail("valid@mail.com");
+            user.setPassword("ValidPassword@1");
+            user.setRole("USER");
+        }
+
+        @Test
+        public void whenUsernameNotValid_thenFailToSave() {
+            user.setUsername(null); //Not valid
+
+            assertThrows(Exception.class, () -> repository.save(user));
+        }
+
+        @Test
+        public void whenEmailNotValid_thenFailToSave() {
+            user.setEmail(null); //Not valid
+
+            assertThrows(Exception.class, () -> repository.save(user));
+        }
+
+        @Test
+        public void whenRoleNotValid_thenFailToSave() {
+            user.setRole(null); //Not valid
+
+            assertThrows(Exception.class, () -> repository.save(user));
+        }
+
+        @Test
+        public void whenPasswordNull_thenSaveOK() {
+            user.setPassword(null); //Valid
+
+            User result = repository.save(user);
+            assertNotNull(result);
+        }
     }
 }

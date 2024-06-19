@@ -19,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -52,6 +54,7 @@ public class UserControllerTest {
         user.setUsername("Jane");
         user.setEmail("jane_doe@mail.com");
         user.setPassword("1234@Valid");
+        user.setRole("USER");
     }
 
     @Test
@@ -133,5 +136,24 @@ public class UserControllerTest {
                 .andExpect(status().isForbidden());
 
         verify(userService, never()).saveUser(user);
+    }
+
+    @Test
+    @DisplayName("Given authenticated as admin, get all user should succeed")
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    public void getAllUsersTest() throws Exception {
+        List<User> list = List.of(user);
+        when(userService.getAllUsers()).thenReturn(list);
+
+        mockMvc.perform(get("/users")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].username").value(user.getUsername()))
+                .andExpect(jsonPath("$.[0].email").value(user.getEmail()))
+                .andExpect(jsonPath("$.[0].password").value(user.getPassword()));
+
+        verify(userService, times(1)).getAllUsers();
+
+
     }
 }
