@@ -84,7 +84,7 @@ public class PaymentControllerIT {
     public void transferMoney_whenNotConnection_shouldFail() throws Exception {
         MoneyTransferDTO dto = new MoneyTransferDTO();
         dto.setAmount(10);
-        dto.setReceiverId(2);//Not yet connected
+        dto.setReceiverId(4);//Not yet connected
         dto.setDescription("Birthday");
 
         mockMvc.perform(post("/payments")

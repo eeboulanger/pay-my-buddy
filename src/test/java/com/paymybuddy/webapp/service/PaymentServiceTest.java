@@ -133,7 +133,7 @@ public class PaymentServiceTest {
     public void getUserConnectionsTest() {
         when(authenticationService.getCurrentUser()).thenReturn(user);
 
-        Set<User> result = paymentService.getUserConnections().orElse(Collections.emptySet());
+        List<User> result = paymentService.getUserConnections().orElse(Collections.emptyList());
 
         verify(authenticationService).getCurrentUser();
         assertNotNull(result);

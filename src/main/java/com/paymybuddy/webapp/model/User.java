@@ -1,5 +1,7 @@
 package com.paymybuddy.webapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -44,9 +46,11 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Account account;
 
+    @JsonBackReference
     @ManyToMany(
             fetch = FetchType.LAZY)
     @JoinTable(
@@ -54,7 +58,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "connected_user_id")
     )
-    private Set<User> connections = new HashSet<>();
+    private List<User> connections = new ArrayList<>();
+
 
     @Override
     public boolean equals(Object o) {

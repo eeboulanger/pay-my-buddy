@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -38,7 +38,7 @@ public class UserConnectionServiceTest {
         email = "jane_doe@mail.com";
         user.setEmail(email);
 
-        user.setConnections(Set.of(connection));
+        user.setConnections(List.of(connection));
     }
 
     @Test

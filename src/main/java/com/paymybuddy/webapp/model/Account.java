@@ -1,5 +1,6 @@
 package com.paymybuddy.webapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.paymybuddy.webapp.exception.PaymentException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,8 @@ public class Account {
     @Column(name = "balance")
     private double balance;
 
-    @OneToOne()
+    @OneToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

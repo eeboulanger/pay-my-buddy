@@ -8,7 +8,6 @@ import com.paymybuddy.webapp.model.User;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Any class that handles payment between users
@@ -22,5 +21,5 @@ public interface IPaymentService {
 
     Optional<List<Transaction>> getCurrentUserTransactions();
 
-    Optional<Set<User>> getUserConnections();
+    Optional<List<User>> getUserConnections();
 }

@@ -2,7 +2,9 @@ INSERT INTO users (username, email, password, role)
 VALUES
 ('John', 'john_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
 ('Jane', 'jane_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
-('Jimmie', 'jimmie_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER');
+('Jimmie', 'jimmie_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
+('Jennie', 'jennie_doe@mail.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'USER'),
+('admin', 'admin@paymybuddy.com', '$2a$12$pCN9Ly1k45REvCU2Qbbly.7.yOHLtD8KDjDAcQLNhyv.5QZeOvusi', 'ADMIN');
 
 INSERT INTO accounts (balance, user_id)
 VALUES

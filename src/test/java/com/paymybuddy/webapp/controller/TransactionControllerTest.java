@@ -80,8 +80,7 @@ public class TransactionControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.amount").value("10.0"))
-                .andExpect(jsonPath("$.description").value("Birthday"))
-                .andExpect(jsonPath("$.sender.id").value("2"));
+                .andExpect(jsonPath("$.description").value("Birthday"));
 
         verify(transactionService, times(1)).saveTransaction(any(Transaction.class));
     }
@@ -142,8 +141,6 @@ public class TransactionControllerTest {
                         .with(csrf()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.[0].amount").value(10.0))
-                .andExpect(jsonPath("$.[0].description").value("Gift"))
-                .andExpect(jsonPath("$.[0].sender.id").value(1))
-                .andExpect(jsonPath("$.[0].receiver.id").value(2));
+                .andExpect(jsonPath("$.[0].description").value("Gift"));
     }
 }

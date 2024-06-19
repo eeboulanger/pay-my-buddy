@@ -1,19 +1,14 @@
 package com.paymybuddy.webapp.controller;
 
 import com.paymybuddy.webapp.model.Transaction;
-import com.paymybuddy.webapp.model.User;
 import com.paymybuddy.webapp.service.ITransactionService;
 import jakarta.validation.Valid;
-import org.hibernate.validator.constraints.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,7 +21,7 @@ public class TransactionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{id}")
-    public List<Transaction> getTransactionsPerUser(@PathVariable int id){
+    public List<Transaction> getTransactionsPerUser(@PathVariable int id) {
         return transactionService.getUserTransactions(id);
     }
 

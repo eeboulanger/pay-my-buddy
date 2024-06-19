@@ -51,7 +51,7 @@ public class TransactionServiceTest {
         List<Transaction> transactionList = new ArrayList<>();
         when(repository.getTransactionsByUserId(1)).thenReturn(transactionList);
 
-        List<Transaction> result = service.getUserTransactions(1);
+        Iterable<Transaction> result = service.getUserTransactions(1);
 
         assertNotNull(result);
         assertEquals(transactionList, result);

@@ -23,7 +23,7 @@ public class UserConnectionControllerIT {
 
     @Test
     @DisplayName("Given there is a user with email, when add new user connection, then add user connection to authenticated user")
-    @WithMockUser(username = "john_doe@mail.com", roles = "USER")
+    @WithMockUser(username = "jimmie_doe@mail.com", roles = "USER")
     public void addUserConnectionTest() throws Exception {
         mockMvc.perform(post("/connections")
                         .with(csrf())

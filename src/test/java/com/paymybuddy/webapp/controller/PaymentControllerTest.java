@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -101,7 +100,7 @@ public class PaymentControllerTest {
     @Nested
     class UserConnectionsTest {
 
-        private Set<User> connections;
+        private List<User> connections;
 
         @BeforeEach
         public void setUp() {
@@ -110,7 +109,7 @@ public class PaymentControllerTest {
             User user2 = new User();
             user2.setUsername("Jane");
 
-            connections = Set.of(user1, user2);
+            connections = List.of(user1, user2);
         }
 
         @Test

@@ -35,6 +35,9 @@ public class UserConnectionService implements IUserConnectionService {
             throw new UserNotFoundException("L'addresse mail doit être différent de la votre");
         }
 
+        if(user.getConnections().contains(userConnection)){
+            throw new UserNotFoundException("La relation a déjà été ajoutée");
+        }
         user.getConnections().add(userConnection);
         userService.saveUser(user);
     }

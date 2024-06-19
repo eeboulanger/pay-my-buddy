@@ -73,7 +73,6 @@ public class AccountControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(account.getId()))
-                .andExpect(jsonPath("$.user.id").value(account.getUser().getId()))
                 .andExpect(jsonPath("$.balance").value(account.getBalance()));
 
         verify(accountService, times(1)).saveAccount(any(Account.class));
@@ -124,7 +123,6 @@ public class AccountControllerTest {
                         .content(mapper.writeValueAsString(account))
                         .with(csrf()))
                 .andExpect(jsonPath("$.id").value(account.getId()))
-                .andExpect(jsonPath("$.user.id").value(account.getUser().getId()))
                 .andExpect(jsonPath("$.balance").value(90));
 
         verify(accountService, times(1)).saveAccount(any(Account.class));

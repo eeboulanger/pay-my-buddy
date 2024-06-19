@@ -120,7 +120,7 @@ public class PayMyBuddyE2E {
             WebElement password = webDriver.findElement(By.id("password"));
             WebElement login = webDriver.findElement(By.id("loginButton"));
 
-            email.sendKeys("john_doe@mail.com");
+            email.sendKeys("jimmie_doe@mail.com");
             password.sendKeys("1234@Abcd");
             login.click();
 
@@ -137,7 +137,7 @@ public class PayMyBuddyE2E {
 
             //WHEN
             username.clear();
-            username.sendKeys("Johnny"); //Update username
+            username.sendKeys("Jim"); //Update username
             passwordField.sendKeys("1234@Abcd");
             submit.click();
 
@@ -178,7 +178,7 @@ public class PayMyBuddyE2E {
 
             //WHEN
             Select select = new Select(dropDownList);
-            select.selectByValue("2");
+            select.selectByValue("1");
             amount.clear();
             amount.sendKeys("2");
             description.sendKeys("Gift");
