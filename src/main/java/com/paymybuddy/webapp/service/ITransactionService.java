@@ -13,4 +13,6 @@ public interface ITransactionService {
     void deleteTransaction(int i);
 
     List<Transaction> getUserTransactions(int id);
+
+    List<Transaction> getTransactionsBySender(int id);
 }

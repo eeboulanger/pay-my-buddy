@@ -1,6 +1,7 @@
 package com.paymybuddy.webapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -37,6 +38,7 @@ public class User {
 
     //Keep nullable for oauth2 user accounts
     @ToString.Exclude
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 

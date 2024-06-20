@@ -136,7 +136,7 @@ public class TransactionControllerTest {
         List<Transaction> transactionList = List.of(new Transaction(
                 10, "Gift", date, sender, receiver
         ));
-        when(transactionService.getUserTransactions(1)).thenReturn(transactionList);
+        when(transactionService.getTransactionsBySender(1)).thenReturn(transactionList);
         mockMvc.perform(get("/transactions/users/{id}", 1)
                         .with(csrf()))
                 .andExpect(status().is2xxSuccessful())

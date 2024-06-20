@@ -1,6 +1,7 @@
 package com.paymybuddy.webapp.it;
 
 import com.paymybuddy.webapp.dto.MoneyTransferDTO;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @TestPropertySource("classpath:application-test.properties")
 public class PaymentControllerIT {
     @Autowired

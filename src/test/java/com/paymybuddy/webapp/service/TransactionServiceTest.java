@@ -57,4 +57,15 @@ public class TransactionServiceTest {
         assertEquals(transactionList, result);
         verify(repository, times(1)).getTransactionsByUserId(1);
     }
+
+    @Test
+    public void getTransactionsBySenderTest(){
+        Iterable<Transaction> transactionList = mock(Iterable.class);
+        when(repository.findBySender(1)).thenReturn(transactionList);
+
+        List<Transaction> result = service.getTransactionsBySender(1);
+
+        assertNotNull(result);
+        verify(repository, times(1)).findBySender(1);
+    }
 }

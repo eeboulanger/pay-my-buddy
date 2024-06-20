@@ -5,6 +5,7 @@ import com.paymybuddy.webapp.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,5 +26,13 @@ public class TransactionService implements ITransactionService {
     @Override
     public List<Transaction> getUserTransactions(int id) {
         return transactionRepository.getTransactionsByUserId(id);
+    }
+
+    @Override
+    public List<Transaction> getTransactionsBySender(int id) {
+        List<Transaction> transactions = new ArrayList<>();
+        Iterable<Transaction> iterable = transactionRepository.findBySender(id);
+        iterable.forEach(transactions::add);
+        return transactions;
     }
 }

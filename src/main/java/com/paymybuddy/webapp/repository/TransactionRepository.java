@@ -13,4 +13,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
 
     @Query("FROM Transaction WHERE sender.id = :id or receiver.id = :id ORDER BY date DESC")
     List<Transaction> getTransactionsByUserId(@Param("id") int id);
+    @Query("FROM Transaction WHERE sender.id = :id ORDER BY date DESC")
+    Iterable<Transaction> findBySender(int id);
 }

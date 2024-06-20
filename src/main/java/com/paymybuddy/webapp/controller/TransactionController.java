@@ -22,7 +22,7 @@ public class TransactionController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{id}")
     public List<Transaction> getTransactionsPerUser(@PathVariable int id) {
-        return transactionService.getUserTransactions(id);
+        return transactionService.getTransactionsBySender(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

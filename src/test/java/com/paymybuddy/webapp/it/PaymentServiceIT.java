@@ -7,6 +7,7 @@ import com.paymybuddy.webapp.repository.TransactionRepository;
 import com.paymybuddy.webapp.repository.UserRepository;
 import com.paymybuddy.webapp.service.ITransactionService;
 import com.paymybuddy.webapp.service.PaymentService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

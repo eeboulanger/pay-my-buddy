@@ -11,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +22,16 @@ public class TransactionRepositoryTest {
 
     @Autowired
     private TransactionRepository repository;
+
+    @Test
+    public void getTransactionsBySenderTest() {
+        List<Transaction> transactions = new ArrayList<>();
+
+        Iterable<Transaction> iterable = repository.findBySender(1);
+        iterable.forEach(transactions::add);
+
+        assertEquals(3, transactions.size());
+    }
 
     @Test
     public void getTransactionsByUserIdTest() {
@@ -82,15 +93,17 @@ public class TransactionRepositoryTest {
     class ValidationTests {
 
         private Transaction transaction;
+
         @BeforeEach
-        public void setUp(){
-           User sender = new User();
+        public void setUp() {
+            User sender = new User();
             sender.setId(1);
             User receiver = new User();
             receiver.setId(2);
             transaction = new Transaction(10, "Gift", Timestamp.from(Instant.now()), sender, receiver);
 
         }
+
         @Test
         public void whenDescriptionNull_thenFailSave() {
             transaction.setDescription(null);
@@ -104,12 +117,14 @@ public class TransactionRepositoryTest {
 
             assertThrows(Exception.class, () -> repository.save(transaction));
         }
+
         @Test
         public void whenReceiverNull_thenFailSave() {
             transaction.setReceiver(null);
 
             assertThrows(Exception.class, () -> repository.save(transaction));
         }
+
         @Test
         public void whenDateNull_thenFailSave() {
             transaction.setDate(null);

@@ -70,8 +70,7 @@ public class UserControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()));
+                .andExpect(jsonPath("$.email").value(user.getEmail()));
 
         verify(userService, times(1)).saveUser(any(User.class));
     }
@@ -149,8 +148,7 @@ public class UserControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].username").value(user.getUsername()))
-                .andExpect(jsonPath("$.[0].email").value(user.getEmail()))
-                .andExpect(jsonPath("$.[0].password").value(user.getPassword()));
+                .andExpect(jsonPath("$.[0].email").value(user.getEmail()));
 
         verify(userService, times(1)).getAllUsers();
 
